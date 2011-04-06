@@ -1,11 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <classpath>
-	<classpathentry kind="src" output="target/eclipse/classes" path="src/main/scala"/>
-	<classpathentry kind="src" output="target/eclipse/resources" path="src/main/resources"/>
-	<classpathentry kind="src" output="target/eclipse/test-classes" path="src/test/scala"/>
-	<classpathentry kind="src" output="target/eclipse/test-resources" path="src/test/resources"/>
-	<classpathentry kind="con" path="org.scala-ide.sdt.launching.SCALA_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
-	<classpathentry kind="con" path="de.element34.sbt_eclipse.classpath.UnmanagedClasspathContainer"/>
-	<classpathentry kind="output" path="target/eclipse/classes"/>
+<classpathentry kind="src" path="src\test\scala" output="target\scala_2.8.1\test-classes" including="**/*.scala" />
+<classpathentry kind="src" path="src\main\scala" including="**/*.scala" />
+<classpathentry kind="lib" path="lib_managed\scala_2.8.1\compile\commons-logging-1.1.1.jar" />
+<classpathentry kind="lib" path="lib_managed\scala_2.8.1\compile\slf4s_2.8.1-1.0.4.jar" />
+<classpathentry kind="lib" path="lib_managed\scala_2.8.1\test\jetty-security-7.3.1.v20110307.jar" />
+<classpathentry kind="lib" path="lib_managed\scala_2.8.1\test\servlet-api-2.5.jar" />
+<classpathentry kind="lib" path="lib_managed\scala_2.8.1\compile\httpcore-4.1.jar" />
+<classpathentry kind="lib" path="lib_managed\scala_2.8.1\test\jetty-xml-7.3.1.v20110307.jar" />
+<classpathentry kind="lib" path="lib_managed\scala_2.8.1\compile\unfiltered_2.8.1-0.3.0.jar" />
+<classpathentry kind="lib" path="lib_managed\scala_2.8.1\test\jetty-util-7.3.1.v20110307.jar" />
+<classpathentry kind="lib" path="lib_managed\scala_2.8.1\compile\unfiltered-jetty_2.8.1-0.3.0.jar" />
+<classpathentry kind="lib" path="lib_managed\scala_2.8.1\compile\commons-codec-1.4.jar" />
+<classpathentry kind="lib" path="lib_managed\scala_2.8.1\test\jetty-webapp-7.3.1.v20110307.jar" />
+<classpathentry kind="lib" path="lib_managed\scala_2.8.1\test\jetty-continuation-7.3.1.v20110307.jar" />
+<classpathentry kind="lib" path="lib_managed\scala_2.8.1\compile\unfiltered-filter_2.8.1-0.3.0.jar" />
+<classpathentry kind="lib" path="lib_managed\scala_2.8.1\compile\slf4j-api-1.6.1.jar" />
+<classpathentry kind="lib" path="lib_managed\scala_2.8.1\compile\httpclient-4.1.1.jar" />
+<classpathentry kind="lib" path="lib_managed\scala_2.8.1\compile\slf4j-simple-1.6.1.jar" />
+<classpathentry kind="lib" path="lib_managed\scala_2.8.1\test\jetty-server-7.3.1.v20110307.jar" />
+<classpathentry kind="lib" path="lib_managed\scala_2.8.1\test\jetty-http-7.3.1.v20110307.jar" />
+<classpathentry kind="lib" path="lib_managed\scala_2.8.1\test\jetty-io-7.3.1.v20110307.jar" />
+<classpathentry kind="lib" path="lib_managed\scala_2.8.1\compile\commons-io-2.0.1.jar" />
+<classpathentry kind="lib" path="lib_managed\scala_2.8.1\compile\unfiltered-utils_2.8.1-0.3.0.jar" />
+<classpathentry kind="lib" path="lib_managed\scala_2.8.1\test\jetty-servlet-7.3.1.v20110307.jar" />
+<classpathentry kind="con" path="org.scala-ide.sdt.launching.SCALA_CONTAINER" />
+<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" />
+<classpathentry kind="output" path="target\scala_2.8.1\classes" />
 </classpath>

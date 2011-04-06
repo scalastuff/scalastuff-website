@@ -1,6 +1,7 @@
 import sbt._
+import de.element34.sbteclipsify._
 
-class ScalastuffWebsiteProject(info:ProjectInfo) extends DefaultWebProject(info) {
+class ScalastuffWebsiteProject(info:ProjectInfo) extends DefaultWebProject(info) with Eclipsify {
 
 //  val javaNetRepo = "Java.net Repository for Maven" at "http://download.java.net/maven/2"
     val maven2Repo = "Maven repo" at "http://repo2.maven.org/maven2"
