@@ -7,14 +7,13 @@ PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
 <web-app>
 <filter>
   <filter-name>ScalastuffWebsite</filter-name>
-  <display-name>Lift Filter</display-name>
-  <description>The Filter that intercepts lift calls</description>
-  <filter-class>net.liftweb.http.LiftFilter</filter-class>
+  <display-name>ScalaStuff Website</display-name>
+  <filter-class>scalastuff.website.Website</filter-class>
 </filter>
   	
 
 <filter-mapping>
-  <filter-name>LiftFilter</filter-name>
+  <filter-name>ScalastuffWebsite</filter-name>
   <url-pattern>/*</url-pattern>
 </filter-mapping>
 

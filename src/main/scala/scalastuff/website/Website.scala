@@ -5,7 +5,6 @@ import java.io.{InputStream, OutputStream}
 import org.apache.commons.io.IOUtils
 import org.apache.http.impl.cookie.DateUtils
 import unfiltered.filter._
-import unfiltered.jetty._
 import unfiltered.request._
 import unfiltered.response._
 
@@ -17,11 +16,6 @@ object Website {
     ("projects" :: "scalabeans" :: Nil) -> ScalaBeansPage,
     ("tools" :: Nil) -> ToolsPage,
     ("tools" :: "unfiltered" :: Nil) -> tools.UnfilteredPage)
-    
-  def main(args: Array[String]) {
-    val website = new Website
-    Http(8080).filter(website).run
-  }
 }
 
 class Website extends Plan with Logging {

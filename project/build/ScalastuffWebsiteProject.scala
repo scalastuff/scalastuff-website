@@ -12,5 +12,7 @@ class ScalastuffWebsiteProject(info:ProjectInfo) extends DefaultWebProject(info)
   val slf4jSimple = "org.slf4j" % "slf4j-simple" % "1.6.1" withSources
   val httpclient = "org.apache.httpcomponents" % "httpclient" % "4.1.1" withSources
   val commonsio = "commons-io" % "commons-io" % "2.0.1" withSources
+  val servlet = "javax.servlet" % "servlet-api" % "2.5"
   val jetty7 = "org.eclipse.jetty" % "jetty-webapp" % "7.3.1.v20110307" % "test"
+  //val jetty7 = "org.eclipse.jetty" % "jetty-webapp" % "7.0.2.RC0" % "test"
 }
