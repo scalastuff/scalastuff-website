@@ -11,6 +11,7 @@ object Page {
 }
 
 abstract class Page extends Logging {
+  
   def xml(implicit context: TemplateContext) = {
     <html>
       <head>
@@ -23,15 +24,23 @@ abstract class Page extends Logging {
 	  	<script type="text/javascript" src="/resources/syntaxhighlighter_3.0.83/scripts/shBrushScala.js"></script>
 	  	<script type="text/javascript">SyntaxHighlighter.all()</script> 
       </head>
-      <body>
-        <img src="/resources/ScalastuffLogo.png"/>
-        { menuXml }
-        { content }
+      <body class={getClass.getSimpleName.takeWhile(_!='$')}>
+        <div class="main-panel">
+      	  <div class="header1">
+      		A site dedicated to scala 
+      	  </div>
+      	  <div class="header2">
+      		<img src="/resources/ScalastuffLogo.png"/>
+      		Stuff that matters
+          </div>
+          { menuXml }
+          { content }
+        </div>
       </body>
     </html>
   }
 
-  private lazy val menuXml = <ul>{ 
+  private lazy val menuXml = <ul class="menu">{ 
     for ((path, page) <- Website.sitemap; (page2, title) <- Page.menu if page==page2) 
       yield <li class={ if (page == this) "selected" else "" }><a href={path.mkString("/", "/", "")}>{title}</a></li>
   }</ul>

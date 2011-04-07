@@ -1,1 +1,47 @@
+
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
+body {
+	background-color: #F1F1F1;
+}
+
+.main-panel {
+	background-color: white;
+	margin: 40px;
+}
+
+.header1 {
+	border-bottom: 4px solid black;
+	height: 24px;
+	width: 100%;
+} 
+
+.menu {
+	background-color: black;
+	width: 100%;
+	margin: 0px;
+	height: 40px;
+	font-family: "Helvetica Neue", Arial, Helvetica, "Nimbus Sans L", sans-serif;
+	font-size: 13px;
+}
+
+.menu li {
+	float: left;
+	padding: 12px;
+	color: white;
+	background-color: black;
+}
+
+.menu li a {
+	color: grey;
+	text-decoration: none;
+}
+
+.menu li.selected a {
+	color: white;
+}
+
 .syntaxhighlighter { padding: 1px !important; }
