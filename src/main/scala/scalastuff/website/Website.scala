@@ -11,11 +11,11 @@ import unfiltered.response._
 object Website {
  
   val sitemap = Map[List[String],Page] (
-    Nil -> HomePage,
+    (Nil) -> HomePage,
     ("projects" :: Nil) -> ProjectsPage,
-    ("projects" :: "scalabeans" :: Nil) -> ScalaBeansPage,
     ("tools" :: Nil) -> ToolsPage,
-    ("tools" :: "unfiltered" :: Nil) -> tools.UnfilteredPage)
+    ("tools" :: "unfiltered" :: Nil) -> tools.UnfilteredPage,
+    ("sitemap" :: Nil) -> SitemapPage) ++ scalabeans.ScalaBeansPage.sitemap
 }
 
 class Website extends Plan with Logging {

@@ -17,5 +17,8 @@ class ScalastuffWebsiteProject(info:ProjectInfo) extends DefaultWebProject(info)
   val jetty7 = "org.eclipse.jetty" % "jetty-webapp" % "7.3.1.v20110307" % "test"
   //val jetty7 = "org.eclipse.jetty" % "jetty-webapp" % "7.0.2.RC0" % "test"
 
-  val scalabeans = "org.scalastuff" %% "scalabeans" % "0.1" 
+  val scalabeans = "org.scalastuff" %% "scalabeans" % "0.1"
+  
+  override def packageAction = super.packageAction dependsOn(docAction) 
+  override def mainResources = super.mainResources +++ "target"
 }
