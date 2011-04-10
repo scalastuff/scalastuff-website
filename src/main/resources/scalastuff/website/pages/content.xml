@@ -1,4 +1,7 @@
 <content title="ScalaBeans 0.1 Documentation">
+	<chapter default="true">
+		<title>Introduction</title>
+	</chapter>
 	<chapter>
 		<title>Getting Started</title>
 	</chapter>
