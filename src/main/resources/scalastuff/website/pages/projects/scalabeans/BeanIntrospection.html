@@ -1,6 +1,143 @@
 <div>
 	<h1>Bean Introspection</h1>
 	<p>
-	// TODO
+	There are 2 types of objects describing a bean within ScalaBeans toolkit: BeanDescriptor and PropertyDescriptor. 
+	BeanDescriptor provides access to property descriptors and to bean constructor. It can be obtained in this way:
+	<pre class="brush: scala">
+	import org.scalabeans.Preamble._
+	
+	val descriptor = descriptorOf[MyBean]
+	</pre>	
+	</p>
+	
+	<h2>Bean Properties</h2>
+	
+	<p>
+	As we have seen before, there are different kinds of properties: mutable, immutable, constructor parameters.
+	In ScalaBeans we have PropertyDescriptor superclass that provides functionality common to all kinds of properties
+	and mixin traits ImmutablePropertyDescriptor, MutablePropertyDescriptor, ConstructorParameter which provide
+	behavior and information specific to corresponding kinds of properties. ImmutablePropertyDescriptor
+	and MutablePropertyDescriptor are mutually exclusive and cannot appear in the same PropertyDescriptor instance.
+	ConstructorParameter trait can be added to any of the property descriptor. So, we get only 4 possible combinations:
+	<ul>
+		<li>ImmutablePropertyDescriptor</li>
+		<li>ImmutablePropertyDescriptor with ConstructorParameter</li>
+		<li>MutablePropertyDescriptor</li>
+		<li>MutablePropertyDescriptor with ConstructorParameter</li>
+	</ul>  
+	</p>
+	
+	<p>
+	This design makes it easy to pattern-match property descriptors and provide different behavior for different kind of properties:
+	<pre class="brush: scala">
+	for (property <- descriptor.property) property match {
+		case constructorParameter: ConstructorParameter => println("Constructor parameter " + property.name)
+		case mutable: MutablePropertyDescriptor => println("var " + property.name)
+		case immutable: ImmutablePropertyDescriptor => println("val " + property.name)
+	}
+	
+	// let's get only mutable properties now
+	val mutableProperties = descriptor.properties collect { case mutable: MutablePropertyDescriptor => mutable }
+	</pre>
+	</p>
+	
+	<p>
+	Property descriptor encapsulates property type information, it's name and accessors (<code>get</code> for immutable
+	and <code>get</code> + <code>set</code> for mutable one).
+	</p>
+	
+	<h2>Type Information</h2>
+	<p>
+	There are 2 forms of type information available at runtime to Scala programs. Java reflection works with implementations
+	of <code>java.lang.reflect.Type</code> interface. Probably the best known one is <code>java.lang.Class</code>, but there
+	are others. Scala itself has <code>scala.reflect.Manifest</code> - it can be injected by compiler via implicits mechanism.
+	Our first idea was to use Manifest everywhere, but then we saw that it is not suitable for pattern-matching and decided
+	to introduce ScalaType which can be constructed at runtime from Manifest or Java Type. Both constructors are available
+	in Preamble and both BeanDescriptor and PropertyDescriptor provide type information in form of ScalaType instance. 
+	</p>
+	<p>
+	ScalaType encapsulates type erasure and type arguments (if there are any):
+	<pre class="brush: scala">
+	trait ScalaType {
+	  def erasure: Class[_]
+	  def arguments: Seq[ScalaType]
+	}	
+	</pre>
+	</p>
+	
+	<h3>Pattern matching</h3>
+	
+	<p>
+	Consider following example:
+	<pre class="brush: scala">
+	def describe(t : ScalaType) = t match {
+	  case StringType => "string"
+	  case OptionType(StringType) => "option of string"
+	  case OptionType(_) => "option of something else"
+	  case ListType(OptionType(IntType)) => "sequence of optional ints"
+	  case SeqType(OptionType(IntType)) => "sequence (but not a list) of optional ints"
+	  case SeqType(OptionType(u)) => "sequence of optional " + u.erasure.getName
+	  case i@IterableType(_) => "iterable of things. Concrete type: " + i.erasure.getName
+	}
+	
+	for (property <- descriptor.properties) describe(property.scalaType)	
+	</pre>
+	As you can see, we are able now not only pattern-match on type erasure, but also on type arguments and even extract them
+	in the case expressions. It is particularly handy for Option and collection types, when we want to know directly the type
+	of collection elements for example.
+	</p>
+	
+	<h3>Collections</h3>
+	
+	<p>
+	ScalaType is useful not only for accessing type information, for collection types it can be also used to get new collection
+	builder. It is provided for exact collection type encapsulated by the ScalaType instance and not for the one which was
+	pattern-matched. So, you can safely match on CollectionType and ask for new builder from it, it will be of the right type.
+	</p>
+	
+	<p>
+	There is some magic happening in CollectionType to find collection companion object and extract newBuilder function from it.
+	It is not guaranteed to work for all collection classes. One obvious exclusion is sorted collections - the way they are
+	sorted is not present in the type, we need Ordering instance to construct a builder. If companion object does not
+	implement GenericCompanion or MapFactory, new builder function will be not discovered as well. 
+	
+	Look at the CollectionType.newBuilder declaration:
+	<pre class="brush: scala">
+		trait CollectionType extends ... {
+			val newBuilder: Option[() => Builder[Any, Traversable[Any]]] = ...
+		}
+	</pre>
+	
+	This scary code says that CollectionType might have a function which produces new collection Builder. Collection elements
+	from the builder point of view are all of type Any, which is not always true, so be careful with element types. 
+	
+	Let's put all this theory in practice. Consider following example:
+	
+	<pre class="brush: scala">
+	class Person {
+		var addresses: Set[Address]
+	}
+	
+	val descriptor = descriptorOf[Person]
+ 
+	for {
+		// get the Scala type first
+		collectionType <- descriptor.property("addresses") collect { case t @ CollectionType(_) => t }
+		// get new builder function (if present, it is an Option)
+		newBuilder <- traversableType.newBuilder
+	} {
+		// call the function to instantiate new collection builder
+		val builder = newBuilder()
+		println(builder.result()) // will print Set()
+	} 	
+	</pre> 
+	
+	Here we can see how all this stuff is used: property type is pattern matched as CollectionType, function extracted from the Option and then
+	called to create new Builder instance. Created collection is of type Set - exactly what is declared in the bean class.
+	</p>
+	
+	<h3>Enums</h3>
+	<p>
+	//TODO
 	</p>
 </div>

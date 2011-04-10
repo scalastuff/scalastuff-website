@@ -74,7 +74,7 @@
 	<p>
 	Inheritance is the special case. If superclass has constructor parameters, we have to include them in the subclass as well and not declare
 	them as val or var. This is not a problem for ScalaBeans since it uses constructor parameter name to find corresponding property (thanks
-	to paranamer library). It is a problem for the bean developer since access to the superclass property will be masked by the constructor parameter.
+	to paranamer library). It is a problem for the bean developer since access to the superclass property will be masked.
 	In such situations '_' can be put in front of the constructor parameter name:
 	
 	<pre class="brush: scala">
