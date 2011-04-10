@@ -24,11 +24,12 @@ abstract class Page extends Logging {
       <head>
         <title>ScalaStuff</title>
 	  	<link href="/resources/syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css" />
-	  	<link href="/resources/syntaxhighlighter_3.0.83/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
+	  	<link href="/resources/syntaxhighlighter_3.0.83/styles/shThemeScalastuff.css" rel="stylesheet" type="text/css" />
 	  	<link href="/resources/Scalastuff.css" rel="stylesheet" type="text/css" />
 	  	<script type="text/javascript" src="/resources/syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
 	  	<script type="text/javascript" src="/resources/syntaxhighlighter_3.0.83/scripts/shBrushJava.js"></script>
 	  	<script type="text/javascript" src="/resources/syntaxhighlighter_3.0.83/scripts/shBrushScala.js"></script>
+	  <script type="text/javascript" src="/resources/syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script>
 	  	<script type="text/javascript">SyntaxHighlighter.all()</script> 
       </head>
       <body class={title}>

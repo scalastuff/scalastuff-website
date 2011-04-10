@@ -126,5 +126,6 @@ body {
 .sitemap-menu ul { padding-left: 24px;}
 
 
+.syntaxhighlighter { font-size: 14px !important;  }
 .syntaxhighlighter { padding: 1px !important; }
-.syntaxhighlighter .toolbar { margin-right:40px !important; }
+.syntaxhighlighter .toolbar { display:none; margin-right:40px !important; }
