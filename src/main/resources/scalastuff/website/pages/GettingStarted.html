@@ -1,0 +1,76 @@
+<div>
+	<h1>Getting Started</h1>
+	<p>
+	First, add ScalaBeans dependency to your project.
+	</p>
+	
+	<p>
+	If you use SBT, add following lines to your project:	
+	<pre class="brush: scala">
+		val scalaStuffRepo = "Scala Stuff Repository" at "https://github.com/scalastuff/maven/raw/master"
+  		val scalabeans = "org.scalastuff" %% "scalabeans_2.8.1" % "0.1"
+	</pre>
+	</p>
+	
+	
+	<p>
+	If you use Maven, add following lines to your pom.xml:
+	<pre class="brush: xml">
+		<dependencies>
+		...
+			<dependency>
+		  		<groupId>org.scalastuff</groupId>
+		  		<artifactId>scalabeans_2.8.1</artifactId>
+		  		<version>0.1</version>
+			</dependency>
+		</dependencies>
+		<repositories>
+		...
+		<repository>
+  			<id>scalastuff</id>
+  			<url>https://github.com/scalastuff/maven/raw/master</url>  		
+  		</repository>
+  		</repositories>
+	</pre>
+	</p>
+	
+	<p>ScalaBeans is cross-compiled to Scala 2.8.0, 2.8.1, 2.9.0RC1</p>
+	
+	<p>
+	Once dependencies are set up, make simple bean <i>(Note: inner classes are not supported)</i>:
+	
+	<pre class="brush: scala">
+		class Person {
+			var firstName = ""
+			var lastName = ""
+			var dateOfBirth = new java.util.Date(0)
+		}
+	</pre>
+	
+	As you can see, we declared all the properties as vars and provided not-null default values. ScalaBeans can work with immutable beans as well,
+	you can read about it in <a>Constructors</a> and <a>Building new Bean instances</a>
+	chapters. Discussion about nulls comes in <a>Serialization</a> chapter. Let's leave it as it is for now and go on with introspection:
+	
+	<pre class="brush: scala">
+		import org.scalabeans.Preamble._
+		
+		object ScalaBeansExample extends Application {
+			val descriptor = descriptorOf[Person]
+			for (property <- descriptor.properties)
+				println(property.name + ": " + property.scalaType) 
+		}
+	</pre>
+	
+	If you run application above, you will see following output:
+	<pre>
+		firstName: String
+		lastName: String
+		dateOfBirth: Date
+	</pre> 
+	</p>
+	
+	<p>
+	That's it. In simple cases there is not much more than that. Read in next chapters about bean properties, constructors, type information
+	and how they can be used in more complex scenarios.  
+	</p>
+</div>
