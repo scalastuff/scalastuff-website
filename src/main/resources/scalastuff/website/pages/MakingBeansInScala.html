@@ -1,0 +1,130 @@
+<div>
+	<h1>Making Beans in Scala</h1>
+	<p>
+	So, what is a Bean in Scala? We need some common ground and understanding on this basic question to be able uniformly
+	interpret data structures coded in Scala programming language and not come back to it each time when developing new framework.
+	With absence of any form of standard in this area we provide our own answer with ScalaBeans and hope you find it consistent and usable
+	for your applications. 
+	</p>
+	
+	<h2>Properties</h2>
+	<p>
+	Scala val and var class members are recognized as properties. Scala getter+setter combination is recognized as property. No-arg function
+	with not Unit return type is <b>not</b> a property. Property immutability is preserved. Consider following class definition:
+	<pre class="brush: scala">
+	class MyBean {
+		val property1 = "value"
+		var property2 = "other value"
+		def property3 = ...
+		def property3_= {
+			...
+		}
+		
+		def createChildBean = { 
+			... 
+		}
+	}
+	</pre>
+	
+	In this class <code>property1</code>, <code>property2</code>, <code>property3</code> will be recognized as a property, 
+	while <code>createChildBean</code> will not. <code>property1</code> will be recognized as immutable, of course.
+	</p>
+	
+	<h2>Constructors</h2>
+	<p>
+	Only default constructor is recognized and supported for bean instance creation. It may have parameters - big difference with JavaBeans.
+	In this way we can work with immutable data structures in ScalaBeans. Each constructor parameter though must match with certain bean property,
+	otherwise we will be simply unable to extract enough information from the bean instance to create it again. Consider following example:
+	
+	<pre class="brush: scala">
+	class MyData(x: String) {
+		val property1 = x + "value"
+	}
+	</pre>
+	
+	While <code>property1</code> is a property, we cannot guess <code>x</code> value at runtime to be able to instantiate a bean. So, we
+	can only read the property value, but not create new instance. Better way to define our class is as this:
+	
+	<pre class="brush: scala">
+	class MyData(val x: String) {
+		val property1 = x + "value"
+	}
+	</pre>
+	
+	or even
+	
+	<pre class="brush: scala">
+	class MyData(val x: String) {
+		def property1 = x + "value"
+	}
+	</pre>
+	
+	<p>
+	ScalaBeans discovers also default constructor parameter values and they can be omitted when creating new bean instance. So, following code
+	will work:
+	<pre class="brush: scala">
+	class MyBean(var property1: String = "some default value")
+	
+	val descriptor = descriptorOf[MyBean]
+	val myBean = descriptor.newInstance()
+	</pre>
+	
+	This will create new bean instance with <code>property1 = "some default value"</code>. 
+	</p>
+	
+	<p>
+	One special case is inheritance. If superclass has constructor parameters, we have to include them in the subclass as well and not declare
+	them as val or var. This is not a problem for ScalaBeans since it uses constructor parameter name to find corresponding property (thanks
+	to paranamer library). It is a problem for the bean developer since access to the superclass property will be masked by the constructor parameter.
+	In such situations '_' can be put in front of the parameter:
+	
+	<pre class="brush: scala">
+	class MySuperBean(var property1: String = "some default value")
+	
+	class SubclassedBean(_property1: String) extends MySuperBean(_property1) {
+		def update(x: String) {
+			property1 = "Hello, " + x
+		}
+	}
+	</pre>
+	
+	ScalaBeans will match <code>_property1</code> to <code>property1</code>.
+	</p>
+	
+	<h2>Enums</h2>
+	<p>
+	Standard Scala enumerations are impossible to work with using reflections. There is <a href="http://scalastuff.wordpress.com/2011/04/01/scala-enums/">number</a>
+	of other problems. We had to introduce another way to code enums. It has to be as elegant as Scala Enumeration class, 
+	but in another way: next to some unique	cool features it has to be reflection-friendly. The result is Enum class found in
+	ScalaBeans library. We were unlucky with the name choice: both Enum and Enumeration classes are already present in default
+	namespace of Scala. So, do not forget to add import when using it.  
+	</p>
+	<p>
+	Here is how it works:
+	<pre class="brush: scala">
+	import org.scalabeans.Enum
+	
+	class Color private ()
+	object Color extends Enum[Color] {
+	  val blue = new Color
+	  val red = new Color
+	  val yellow = new Color
+	}	
+	</pre>
+	
+	All enum values have ordinal and name assigned automatically, but you can redefine them:
+	<pre class="brush: scala">
+	import org.scalabeans.Enum
+	
+	case class Color private (r: Int, g: Int, b: Int)
+	object Color extends Enum[Color] {
+	  val blue = Color(0, 0, 255)
+	  val red = Color(255, 0, 0) ordinal 1
+	  val yellow = Color(0, 255, 255) name "light-yellow"
+	}		
+	</pre>
+	
+	As you can see, custom fields can be added as well. Such enums can be used as bean property types and are easy to work with in the generic way.
+	All Enum values of concrete enum type can be obtained at runtime, as well as found by ordinal value or by name.
+	</p>
+</div>
