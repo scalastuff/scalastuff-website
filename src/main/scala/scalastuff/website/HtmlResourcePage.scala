@@ -19,6 +19,6 @@ class HtmlResourcePage(file : File) extends Page {
 	
 	def content(implicit context : TemplateContext) = page
 	
-	override val title = file.getName.dropRight(5)
+	override val title = (page \\ "h1").text
 	
 }
