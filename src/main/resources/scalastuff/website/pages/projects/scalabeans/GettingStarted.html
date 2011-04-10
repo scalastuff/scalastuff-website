@@ -56,7 +56,7 @@
 		
 		object ScalaBeansExample extends Application {
 			val descriptor = descriptorOf[Person]
-			for (property <- descriptor.properties)
+			for (property &lt;- descriptor.properties)
 				println(property.name + ": " + property.scalaType) 
 		}
 	</pre>

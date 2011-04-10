@@ -22,6 +22,10 @@ class ScalastuffWebsiteProject(info:ProjectInfo) extends DefaultWebProject(info)
   override def packageAction = super.packageAction dependsOn(docAction) 
   override def mainResources = super.mainResources +++ "target"
   
+  override def packageToPublishActions = super.packageToPublishActions ++ Seq(packageDocs, packageSrc)
+  
   override def managedStyle = ManagedStyle.Maven
+  //lazy val touchContextAction = task { print("Touching context..."); None }
+ // override def publishAction = super.compileAction dependsOn(touchContextAction)
   lazy val publishTo = Resolver.sftp("Scalastuff Maven Repo", "www.scalastuff.org", "/opt/jetty-7.3.0/webapps")
 }
