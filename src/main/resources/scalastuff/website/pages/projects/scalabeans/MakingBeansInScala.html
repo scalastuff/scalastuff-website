@@ -1,9 +1,9 @@
 <div>
 	<h1>Making Beans in Scala</h1>
 	<p>
-	So, what is a Bean in Scala? We need some common ground and understanding on this basic question to be able uniformly
+	So, what is a Bean in Scala? We need a common ground and understanding on this basic question to be able uniformly
 	interpret data structures coded in Scala programming language and not come back to it each time when developing new framework.
-	With absence of any form of standard in this area we provide our own answer with ScalaBeans and hope you find it consistent and usable
+	With absence of any form of standard in this area we provide our own answer with ScalaBeans and hope you find it both consistent and usable
 	for your applications. 
 	</p>
 	
@@ -27,7 +27,7 @@
 	</pre>
 	
 	In this class <code>property1</code>, <code>property2</code>, <code>property3</code> will be recognized as a property, 
-	while <code>createChildBean</code> will not. <code>property1</code> will be recognized as immutable, of course.
+	while <code>createChildBean</code> will not. <code>property1</code> will be recognized as immutable property, of course.
 	</p>
 	
 	<h2>Constructors</h2>
@@ -72,10 +72,10 @@
 	</p>
 	
 	<p>
-	One special case is inheritance. If superclass has constructor parameters, we have to include them in the subclass as well and not declare
+	Inheritance is the special case. If superclass has constructor parameters, we have to include them in the subclass as well and not declare
 	them as val or var. This is not a problem for ScalaBeans since it uses constructor parameter name to find corresponding property (thanks
 	to paranamer library). It is a problem for the bean developer since access to the superclass property will be masked by the constructor parameter.
-	In such situations '_' can be put in front of the parameter:
+	In such situations '_' can be put in front of the constructor parameter name:
 	
 	<pre class="brush: scala">
 	class MySuperBean(var property1: String = "some default value")
@@ -92,7 +92,7 @@
 	
 	<h2>Enums</h2>
 	<p>
-	Standard Scala enumerations are impossible to work with using reflections. There is <a href="http://scalastuff.wordpress.com/2011/04/01/scala-enums/">number</a>
+	Standard Scala enumerations are impossible to work with using reflection. There is also <a href="http://scalastuff.wordpress.com/2011/04/01/scala-enums/">number</a>
 	of other problems. We had to introduce another way to code enums. It has to be as elegant as Scala Enumeration class, 
 	but in another way: next to some unique	cool features it has to be reflection-friendly. The result is Enum class found in
 	ScalaBeans library. We were unlucky with the name choice: both Enum and Enumeration classes are already present in default
@@ -124,6 +124,6 @@
 	</pre>
 	
 	As you can see, custom fields can be added as well. Such enums can be used as bean property types and are easy to work with in the generic way.
-	All Enum values of concrete enum type can be obtained at runtime, as well as found by ordinal value or by name.
+	All Enum values of concrete enum type can be obtained at runtime, as well as found by ordinal value or by the name.
 	</p>
 </div>
