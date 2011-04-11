@@ -2,31 +2,37 @@ package scalastuff.website
 
 import com.weiglewilczek.slf4s.Logging
 import java.io.{File,InputStream, OutputStream}
+import java.net.URI
 import javax.servlet.FilterConfig
 import org.apache.commons.io.IOUtils
 import org.apache.http.impl.cookie.DateUtils
 import unfiltered.filter._
 import unfiltered.request._
 import unfiltered.response._
+import scalastuff.webtoolkit.{Page,PageDecorator,StaticPage,PageRequest}
+import xml.NodeSeq
+import scala.collection.mutable
 
 object Website {
  
-  var pagesDir : String = ""
+	val decoratorMap = Map[String, Map[String,NodeSeq] => Page => PageDecorator](
+			"ScalastuffDecorator" -> (pars => page => new ScalastuffDecorator(page)),
+			"ProjectPageDecorator" -> (pars => page => new ProjectPageDecorator(page))
+	)
 
-  lazy val sitemap = Map[List[String],Page] (
-    (Nil) -> HomePage,
-    ("projects" :: Nil) -> ProjectsPage,
-    ("tools" :: Nil) -> ToolsPage,
-    ("tools" :: "unfiltered" :: Nil) -> tools.UnfilteredPage,
-    ("sitemap" :: Nil) -> SitemapPage) ++ 
-    scalabeans.ScalaBeansPage.sitemap ++
-    Map(new File(pagesDir).listFiles.flatMap(scanPages(Nil, _)):_*)
+	val dynamicPages =   	
+		HomePage :: 
+  	ProjectsPage :: 
+	  ToolsPage :: 
+	  tools.UnfilteredPage :: 
+	  SitemapPage :: Nil
 
-  private def scanPages(path : List[String], file : File) : Seq[(List[String], Page)] = file match {
-	case f if f.getName.endsWith(".html") => println("path: " + (path :+ f.getName.dropRight(5))); Seq((path :+ f.getName.dropRight(5), new HtmlResourcePage(f)))
-	case d if d.isDirectory => d.listFiles.flatMap(f => scanPages(path :+ d.getName, f))
-	case _ => Seq()
-  }
+	
+  val pages : Seq[Page] = 
+  	dynamicPages ++  
+  	StaticPage.load(Nil, new URI("classpath:/scalastuff/website/"), decoratorMap)  
+	  	
+  val sitemap = Map(pages.reverse.map(page => page.path -> page):_*) 
 }
 
 class Website extends Plan with Logging {
@@ -39,21 +45,21 @@ class Website extends Plan with Logging {
   	ETag(Server.hashCode.toString)
 
   def stream(resource : String) = new ResponseStreamer {
-	def stream(os: OutputStream) = IOUtils.copy(getClass.getResourceAsStream("resources/" + resource), os)
+    def stream(os: OutputStream) = IOUtils.copy(getClass.getResourceAsStream("resources/" + resource), os)
   }
   	
   override def init(config : FilterConfig) = {
-	Website.pagesDir = config.getServletContext.getRealPath("WEB-INF/classes/scalastuff/website/pages/")
-	println(Website.sitemap)
     super.init(config)
+    println(Website.sitemap)
   }
 
   def intent = {
     case Path(Seg("resources" :: resource)) => Caching ~> stream(resource.mkString("/"))
     case Path(Seg("favicon.ico" :: Nil)) => Caching ~> stream("ScalastuffIcon.png")
-    case Path(Seg(path)) => Html(Website.sitemap.getOrElse(path, NotFoundPage).xml(new TemplateContext(path)))
+    case Path(Seg(path)) =>
+    	val page = Website.sitemap.getOrElse(path, new NotFoundPage(path))
+    	val request = new PageRequest(page) 
+    	val html = (page.decorators :\ page.html(request))(_.decorate(_)(request))
+    	Html(html)
   }
 }
-
-case class TemplateContext(path : List[String])
- 

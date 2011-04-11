@@ -1,9 +1,13 @@
 package scalastuff.website.tools
 
 import scalastuff.website._
+import scalastuff.webtoolkit.{Menu,Trail,Page,PageDecorator,PageRequest}
 
-object UnfilteredPage extends Page {
-  def content(implicit context: TemplateContext) =
+object UnfilteredPage extends ScalastuffPage {
+	
+	val path = "tools" :: "unfiltered" :: Nil
+	
+  def html(implicit request : PageRequest) =
     <div>
 	  <h1>Unfiltered</h1>
 	  <h2>Description</h2>

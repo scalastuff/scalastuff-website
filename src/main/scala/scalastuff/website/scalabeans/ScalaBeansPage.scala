@@ -2,15 +2,14 @@ package scalastuff.website.scalabeans
 
 import scalastuff.website._
 import xml.NodeSeq
+import scalastuff.webtoolkit.{PageRequest}
 
-object ScalaBeansPage extends Page with ProjectSidebar {
+
+object ScalaBeansPage extends ScalastuffPage {
   
-  val sitemap = Map[List[String],Page] (
-    ("projects" :: "scalabeans" :: Nil) -> ScalaBeansPage,
-    ("projects" :: "scalabeans" :: "scalatypes" :: Nil) -> ScalaTypesPage,
-    ("projects" :: "scalabeans" :: "usage" :: Nil) -> UsagePage)
+	val path = "projects" :: "scalabeans" :: Nil;
   
-  def content2(implicit context: TemplateContext) =  
+  def html(implicit request: PageRequest) =  
     <div>
     <h1>ScalaBeans</h1>
     <p>ScalaBeans is a reflection toolkit for Scala.</p>

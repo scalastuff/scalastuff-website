@@ -1,0 +1,7 @@
+<index>
+  <decorator kind="ProjectPageDecorator"><javadoc>http:docs</javadoc></decorator>
+  <decorator file="ScalaBeansDecorator.xml"><javadoc>http:docs</javadoc></decorator>
+	<page path="" file="Introduction.html"/>
+	<page path="getting-started" file="GettingStarted.html"/>
+	<page path="making-beans" file="MakingBeansInScala.html"/>
+</index> 

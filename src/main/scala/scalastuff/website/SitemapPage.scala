@@ -1,12 +1,15 @@
 package scalastuff.website
 
 import scalastuff.webtoolkit.Menu
+import scalastuff.webtoolkit.PageRequest
 
-object SitemapPage extends Page {
+object SitemapPage extends ScalastuffPage {
+
+	val path = "sitemap" :: Nil;
   
-  lazy val menu = Menu[Page](Website.sitemap, _.title, this, depth=99, expandAll=true)
+  lazy val menu = Menu(Website.pages, this, depth=99, expandAll=true)
   
-  def content(implicit context: TemplateContext) =
+  def html(implicit request : PageRequest) =
     <div>
 	  <h1>Sitemap</h1>
 	  <div class="sitemap-menu">

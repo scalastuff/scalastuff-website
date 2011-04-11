@@ -1,10 +1,13 @@
 package scalastuff.website
 
-import xml.NodeSeq
 import xml.NodeSeq.Empty
+import scalastuff.webtoolkit.PageRequest
 
-object HomePage extends Page {
-  def content(implicit context: TemplateContext) =
+object HomePage extends ScalastuffPage {
+	
+	val path = Nil
+	
+	def html(implicit request : PageRequest) =
     <div style="position:relative;height: 400px;">
 	  <div style="top: 10%; left: 10%">
 	  <h3>Stuff we Made</h3>
