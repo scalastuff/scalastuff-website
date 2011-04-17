@@ -1,0 +1,39 @@
+<template:include file="ScalastuffPage.xml">
+  <div class="wrapper">
+    <!-- content -->
+    <section id="content">
+      <div class="container_12">
+        <div class="wrapper">
+         <aside class="grid_35">
+           <div class="box">
+            <template:intro-box/>
+           </div>
+           <div class="box">
+             <h2>Navigation</h2>
+             <menu class="list1" flat="true" root="/scalabeans"/>
+             <div class="extra-links">
+               <a href="/#">Read more</a> &#160;| &#160;<a href="/#">Get rss feeds</a>
+             </div>
+           </div>
+           <div class="box">
+             <h2>Get involved</h2>
+             <p>If you like to contribute to ScalaBeans, leave your email address here.</p>
+             <form action="" id="newsletter-form">
+               <fieldset><input type="text"/><input type="submit" value="ok"/></fieldset>
+             </form>
+           </div>
+         </aside>
+               <div class="grid_8">
+            <div class="indent">
+              <trail class="trail"> -> </trail>
+            
+              <article>
+                <template:content/>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</template:include>

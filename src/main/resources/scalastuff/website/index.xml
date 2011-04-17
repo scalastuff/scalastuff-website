@@ -1,3 +1,8 @@
 <index>
-	<page path="projects/scalabeans" file="projects/scalabeans"/>
+	<index path="scalabeans" file="scalabeans/"/>
+	<index path="scalacas" file="scalacas/"/>
+	<index path="scalaweb" file="scalaweb/"/>
+  <processor name="menu" inherit="true"/>
+  <processor name="trail" inherit="true"/>
+	<page file="Home.html"/>
 </index> 

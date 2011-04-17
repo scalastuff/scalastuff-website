@@ -1,0 +1,10 @@
+<template:include file="/ProjectPage.xml">
+<template:content />
+<template:intro-box>
+    <h2>ScalaBeans</h2>
+    <p>Reflective library for scala</p>
+    <div class="extra-links">
+      <a href="/#">view scaladoc</a> &#160;| &#160;<a href="https://github.com/scalastuff/scalabeans">view sources</a>
+    </div>
+</template:intro-box>
+</template:include>

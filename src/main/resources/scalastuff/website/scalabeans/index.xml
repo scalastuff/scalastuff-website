@@ -1,0 +1,8 @@
+<index>
+  <decorator file="ScalaBeansPage.xml"><param name="javadoc">http:docs</param></decorator>
+	<page path="" file="Introduction.html"/>
+	<page path="getting-started" file="GettingStarted.html"/>
+	<page path="making-beans" file="MakingBeansInScala.html"/>
+	<page path="introspection" file="BeanIntrospection.html"/>
+	<page path="features" file="Features.html"/>
+</index> 

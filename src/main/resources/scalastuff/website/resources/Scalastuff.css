@@ -1,131 +1,19 @@
-
-* {
-	margin: 0px;
-	padding: 0px;
-	font-family: "Helvetica Neue", Arial, Helvetica, "Nimbus Sans L", sans-serif;
-}
-
-p {
-	font-family: Georgia, "Bitstream Charter", serif;
-	color: #333;
-	font-size: 16px;
-	line-height: 24px;
-	margin-bottom: 12px;
-}
-
-a { color: #888; text-decoration: none; }
-a:hover { color: #EA6100;}
-
-h1 {
-	font-weight: bold;
-	color: black;
-	font-size: 21px;
-}
-
-body {
-	background-color: #F1F1F1;
-}
-
-.trail { font-size: 12px; padding-left: 24px; margin-top: 18px;}
+.trail { font-size: 12px; padding-left: 0px; margin-bottom: 17px;}
 .trail li { display: inline }
 .trail .sep { margin-left: 4px; margin-right: 4px;  }
 
 
-.main-panel {
-	background-color: white;
-	margin-top: 20px;
-	margin-left: 5%;
-	margin-right: 5%;
-	overflow: hidden;
+.title-panel div {
+  padding-left: 12px;
+  float:left;
+  padding-top: 32px;
+  margin-bottom: 12px;
 }
 
-.layout-with-sidebar td { width: 100%; border: 1px solid white;}
-.layout-with-sidebar td { vertical-align: top;}
-.layout-with-sidebar td.content2 { width: *; }
-.layout-with-sidebar td.sidebar {}
-
-.sidebarold {
-	float:right;
-	width: 28%;
+.title-panel div span {
+  display: block;
+  text-align: right;
+  font-family: Georgia, "Bitstream Charter", serif;
+  font-style: italic;
+  color: white;
 }
-
-.page-content {
-	padding-top: 12px;
-	padding-left: 24px;
-	padding-right: 24px;
-}
-
-.page-contentold {
-	width: 70%;
-	float:left;
-	clear: left;
-}
-
-.header1 {
-	border-bottom: 4px solid black;
-	height: 24px;
-	width: 100%;
-}
-
-.header2 div {
-	display: table;
-	padding-left: 12px;
-	padding-top: 12px;
-	margin-bottom: 12px;
-}
-.header2 div span {
-	display: block;
-	text-align: right;
-	font-family: Georgia, "Bitstream Charter", serif;
-	font-style: italic;
-}
-
-/***** Main Menu *****/
-
-.main-menu {
-	background-color: black;
-	width: 100%;
-	margin: 0px;
-	height: 40px;
-	font-size: 13px;
-}
-
-.main-menu li {
-	float: left;
-	padding-top: 12px;
-	padding-left: 24px;
-	color: white;
-	background-color: black;
-}
-
-.main-menu li a, .main-menu li.open.Home a {
-	color: grey;
-	text-decoration: none;
-}
-
-.main-menu li.selected a, .main-menu li.open a, .main-menu li.selected.Home a {
-	color: white;
-}
-
-/***** Sidebar *****/
-.sidebar h1, .sidebar div, .sidebar p { font-size: 14px; margin-bottom: 6px;}
-.sidebar { font-size: 14px; }
-
-/***** Side Menu *****/
-
-.sidebar-menu li { list-style: none;}
-.sidebar-menu li a { text-decoration: none;}
-.sidebar-menu ul { padding-left: 12px;}
-.sidebar-menu li.selected a { color: black; }
-.sidebar-menu li.selected li a { color: #888; }
-
-/***** Sitemap Menu *****/
-
-.sitemap-menu li { list-style: none;}
-.sitemap-menu li a { text-decoration: none;}
-.sitemap-menu ul { padding-left: 24px;}
-
-
-.syntaxhighlighter { font-size: 14px !important;  }
-.syntaxhighlighter { padding: 1px !important; }
-.syntaxhighlighter .toolbar { display:none; margin-right:40px !important; }

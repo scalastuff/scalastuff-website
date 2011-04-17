@@ -1,0 +1,4 @@
+<index>
+  <decorator file="ScalaCasPage.xml"></decorator>
+	<page path="" file="Introduction.html"/>
+</index> 

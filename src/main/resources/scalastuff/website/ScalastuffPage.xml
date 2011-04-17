@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="/resources/css/reset.css" type="text/css" media="all"/>
+<link rel="stylesheet" href="/resources/css/grid.css" type="text/css" media="all"/>
+<link rel="stylesheet" href="/resources/css/style.css" type="text/css" media="all"/>
+<link rel="stylesheet" href="/resources/Scalastuff.css" type="text/css" media="all"/>
+<script type="text/javascript" src="resources/js/jquery-1.4.2.min.js" ></script>
+<script type="text/javascript" src="resources/js/jquery.anythingslider.js"></script>
+<script type="text/javascript" src="resources/js/jquery.easing.1.2.js"></script>
+<script type="text/javascript">
+    
+  function formatText(index, panel) {
+    return index + "";
+    }
+  
+      $(function () {
+      
+        $('.anythingSlider').anythingSlider({
+          easing: "easeInOutExpo",        // Anything other than "linear" or "swing" requires the easing plugin
+          autoPlay: true,                 // This turns off the entire FUNCTIONALY, not just if it starts running or not.
+          delay: 3000,                    // How long between slide transitions in AutoPlay mode
+          startStopped: false,            // If autoPlay is on, this can force it to start stopped
+          animationTime: 600,             // How long the slide transition takes
+          hashTags: true,                 // Should links change the hashtag in the URL?
+          buildNavigation: true,          // If true, builds and list of anchor links to link to each slide
+          pauseOnHover: true,             // If true, and autoPlay is enabled, the show will pause on hover
+          startText: "Play",             // Start text
+          stopText: "Stop"               // Stop text
+        });
+      });
+</script>
+<!--[if lt IE 7]>
+  <link rel="stylesheet" href="/css/ie/ie6.css" type="text/css" media="screen">
+  <script type="text/javascript" src="js/ie_png.js"></script>
+  <script type="text/javascript">
+      ie_png.fix('.png');
+  </script>
+<![endif]-->
+<!--[if lt IE 9]>
+    <script type="text/javascript" src="js/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div id="main">
+  <!-- header -->
+  <header>
+    <div class="title-panel">
+      <div>
+        <img src="/resources/ScalastuffLogoWhite.png" height="40px"/> <span>Stuff
+          that matters</span>
+      </div>
+    </div>
+
+    <a href="/#" class="rss">RSS Submit</a>
+    <nav>
+      <menu flat="true" depth="1"/>
+    </nav>
+  </header>
+  <template:top/>
+  <template:content/>
+
+  <!-- footer -->
+  <footer>
+    <nav>
+      <ul>
+        <li><a href="/index.html" class="current">Home Page</a></li>
+        <li><a href="/index-1.html">About Us</a></li>
+        <li><a href="/index-2.html">Solutions</a></li>
+        <li><a href="/index-3.html">Partners</a></li>
+        <li><a href="/index-4.html">Clients</a></li>
+        <li><a href="/index-5.html">Contacts</a></li>
+      </ul>
+    </nav>
+    Consultex  copy; 2010 bull; <a href="/index-6.html">Privacy Policy</a>
+  </footer>
+</div>
+</body>
+</html>
