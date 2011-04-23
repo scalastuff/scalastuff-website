@@ -10,7 +10,7 @@
            </div>
            <div class="box">
              <h2>Navigation</h2>
-             <menu class="list1" flat="true" root="/scalabeans"/>
+             <menu class="list1" flat="true" root="/projects/scalabeans" depth="1"/>
              <div class="extra-links">
                <a href="/#">Read more</a> &#160;| &#160;<a href="/#">Get rss feeds</a>
              </div>

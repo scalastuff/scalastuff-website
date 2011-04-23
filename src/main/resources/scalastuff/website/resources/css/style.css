@@ -28,8 +28,8 @@ html, body { height:100%;}
 
 	/* Header */
 	header{
-		height:162px;
-		overflow:hidden;
+		height:122px;
+		overflow:hidden; 
 		position:relative;
 		}
 	
@@ -41,7 +41,7 @@ html, body { height:100%;}
 		border-radius:7px;
 		-moz-border-radius:7px;
 		-webkit-border-radius:7px;
-		behavior:url(js/PIE.htc);
+		behavior:url(resources/js/PIE.htc);
 		}
 	
 	/* Sidebar */
@@ -54,7 +54,7 @@ html, body { height:100%;}
 		border-radius:7px;
 		-moz-border-radius:7px;
 		-webkit-border-radius:7px;
-		behavior:url(js/PIE.htc);
+		behavior:url(resources/js/PIE.htc);
 		margin-bottom:1px;
 		}
 		aside.top .inner {
@@ -166,6 +166,10 @@ h3 {
 	zoom:1;
 	padding:28px 0 23px 59px;
 	}
+	h3 a {
+	text-decoration: none;
+	color:#353535;
+	}
 	h3 img {
 		position:absolute;
 		left:0;
@@ -180,6 +184,15 @@ h3 {
 		top:58px;
 		width:100%;
 		}
+		
+.box h3 {
+  padding-top: 0px;
+}
+  .box h3 img {
+  padding: 0px !important;
+    top:-6px;
+    }
+
 h4 {
 	font-size:15px;
 	line-height:17px;
@@ -228,7 +241,7 @@ h6 {
 	border-radius:5px;
 	-moz-border-radius:5px;
 	-webkit-border-radius:5px;
-	behavior:url(js/PIE.htc);
+	behavior:url(resources/js/PIE.htc);
 	font-weight:bold;
 }
 .button:hover {
@@ -244,7 +257,7 @@ h6 {
 	border-radius:7px;
 	-moz-border-radius:7px;
 	-webkit-border-radius:7px;
-	behavior:url(js/PIE.htc);
+	behavior:url(resources/js/PIE.htc);
 	margin-bottom:12px;
 	color:#2b3755;
 }
@@ -303,36 +316,23 @@ header .logo {
 		}
 
 
-/* RSS icon */
-.rss {
-	display:block;
-	position:absolute;
-	right:31px;
-	top:54px;
-	background:url(../images/icon-rss.png) no-repeat 100% 0;
-	padding:12px 42px 0 0;
-	color:#fff;
-	text-shadow:1px 1px 0 rgba(0, 0, 0, .9);
-	font-size:13px;
-	}
-
 
 /* Navigation */
 header nav {
 	position:absolute;
-	left:130PX;
-	top:118px;
+	left:420PX;
+	top:36px;
 	}
 	header nav li {
 		float:left;
 		}
 		header nav li a {
 			float:left;
-			width:161px;
-			height:44px;
+			width:100px;
+			height:60px;
 			line-height:44px;
 			text-align:center;
-			background:url(../images/nav-bg.png) no-repeat 0 0;
+			background:url('/resources/images/nav-bg-2.png') no-repeat 0 6px;
 			color:#fff;
 			text-shadow:1px 1px 0 #11182c;
 			font-size:13px;
@@ -341,13 +341,11 @@ header nav {
 			margin-left:4px;
 			}
 		header nav li a:hover {
-			background:url(../images/nav-bg-hover.png) no-repeat 0 0;
-			text-shadow:1px 1px 0 #f1b955;
-			color:#27324d;
+			background:url(../images/nav-bg-hover.png) no-repeat 0 6px;
 		}
 		header nav li.selected a,
 		header nav li a.current {
-			background:url(../images/nav-bg-act.png) no-repeat 0 0;
+			background:url(../images/nav-bg-act-2.png) no-repeat 0 6px;
 			text-shadow:1px 1px 0 #f1b955;
 			color:#27324d;
 			}
@@ -500,13 +498,14 @@ article.last {
 
 
 /* News */
+.news lu {
+	
+}
 .news li {
-	position:relative;
-	zoom:1;
-	padding:0 0 25px 74px;
+		clear:both;
 	}
 	.news li p.date {
-		position:absolute;
+		float:left;
 		left:0;
 		top:0;
 		background:url(../images/date-bg.gif) no-repeat 0 0;
@@ -515,6 +514,7 @@ article.last {
 		color:#fff;
 		width:54px;
 		height:54px;
+		padding-right: 10px;
 		}
 		.news li p.date strong {
 			font-size:30px;
@@ -529,6 +529,7 @@ article.last {
 /* Content
 ---------------------------------------- */
 footer {
+	text-align: center;
 	color:#3e4e7d;
 	font-size:12px;
 	line-height:18px;
@@ -572,7 +573,7 @@ footer {
 		border-radius:3px;
 		-moz-border-radius:3px;
 		-webkit-border-radius:3px;
-		behavior:url(js/PIE.htc);
+		behavior:url(resources/js/PIE.htc);
 		}
 	  .grid_35 #newsletter-form input[type=text] {
 		width:140px;
@@ -584,7 +585,7 @@ footer {
 		border-radius:3px;
 		-moz-border-radius:3px;
 		-webkit-border-radius:3px;
-		behavior:url(js/PIE.htc);
+		behavior:url(resources/js/PIE.htc);
 		font-size:11px;
 		color:#2b3755;
 		text-transform:uppercase;

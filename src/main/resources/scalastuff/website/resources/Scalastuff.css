@@ -17,3 +17,7 @@
   font-style: italic;
   color: white;
 }
+
+.syntaxhighlighter { font-size: 12px !important;  }
+.syntaxhighlighter { padding: 1px !important; }
+.syntaxhighlighter .toolbar { display:none; margin-right:40px !important; }

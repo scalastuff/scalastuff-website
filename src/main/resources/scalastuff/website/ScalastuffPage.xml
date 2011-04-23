@@ -2,13 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
+     <title>ScalaStuff</title>
 <link rel="stylesheet" href="/resources/css/reset.css" type="text/css" media="all"/>
 <link rel="stylesheet" href="/resources/css/grid.css" type="text/css" media="all"/>
 <link rel="stylesheet" href="/resources/css/style.css" type="text/css" media="all"/>
 <link rel="stylesheet" href="/resources/Scalastuff.css" type="text/css" media="all"/>
-<script type="text/javascript" src="resources/js/jquery-1.4.2.min.js" ></script>
-<script type="text/javascript" src="resources/js/jquery.anythingslider.js"></script>
-<script type="text/javascript" src="resources/js/jquery.easing.1.2.js"></script>
+   <link href="/resources/syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css" />
+   <link href="/resources/syntaxhighlighter_3.0.83/styles/shThemeScalastuff.css" rel="stylesheet" type="text/css" />
+   <link href="/resources/Scalastuff.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/resources/js/jquery-1.4.2.min.js" ></script>
+<script type="text/javascript" src="/resources/js/jquery.anythingslider.js"></script>
+<script type="text/javascript" src="/resources/js/jquery.easing.1.2.js"></script>
+<script type="text/javascript" src="/resources/syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+<script type="text/javascript" src="/resources/syntaxhighlighter_3.0.83/scripts/shBrushJava.js"></script>
+<script type="text/javascript" src="/resources/syntaxhighlighter_3.0.83/scripts/shBrushScala.js"></script>
+<script type="text/javascript" src="/resources/syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script>
+<script type="text/javascript">SyntaxHighlighter.all()</script> 
 <script type="text/javascript">
     
   function formatText(index, panel) {
@@ -31,16 +40,16 @@
         });
       });
 </script>
-<!--[if lt IE 7]>
-  <link rel="stylesheet" href="/css/ie/ie6.css" type="text/css" media="screen">
-  <script type="text/javascript" src="js/ie_png.js"></script>
+&lt;!--[if lt IE 7]>
+  <link rel="stylesheet" href="/resources/css/ie/ie6.css" type="text/css" media="screen"/>
+  <script type="text/javascript" src="/resources/js/ie_png.js"></script>
   <script type="text/javascript">
       ie_png.fix('.png');
   </script>
-<![endif]-->
-<!--[if lt IE 9]>
-    <script type="text/javascript" src="js/html5.js"></script>
-  <![endif]-->
+&lt;![endif]-->
+&lt;!--[if lt IE 9]>
+    <script type="text/javascript" src="/resources/js/html5.js"></script>
+  &lt;![endif]-->
 </head>
 <body>
 <div id="main">
@@ -48,14 +57,12 @@
   <header>
     <div class="title-panel">
       <div>
-        <img src="/resources/ScalastuffLogoWhite.png" height="40px"/> <span>Stuff
-          that matters</span>
+        <img src="/resources/ScalastuffLogoWhite.png" height="40px"/> <span>Stuff that matters</span>
       </div>
     </div>
-
-    <a href="/#" class="rss">RSS Submit</a>
     <nav>
-      <menu flat="true" depth="1"/>
+      <menu root="/" flat="true" depth="1"/>
+      
     </nav>
   </header>
   <template:top/>
@@ -64,16 +71,8 @@
   <!-- footer -->
   <footer>
     <nav>
-      <ul>
-        <li><a href="/index.html" class="current">Home Page</a></li>
-        <li><a href="/index-1.html">About Us</a></li>
-        <li><a href="/index-2.html">Solutions</a></li>
-        <li><a href="/index-3.html">Partners</a></li>
-        <li><a href="/index-4.html">Clients</a></li>
-        <li><a href="/index-5.html">Contacts</a></li>
-      </ul>
+    ScalaStuff.org &#0169; 2011 &#8226; <a href="/sitemap">sitemap</a>
     </nav>
-    Consultex  copy; 2010 bull; <a href="/index-6.html">Privacy Policy</a>
   </footer>
 </div>
 </body>

@@ -8,7 +8,7 @@ PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
 <filter>
   <filter-name>ScalastuffWebsite</filter-name>
   <display-name>ScalaStuff Website</display-name>
-  <filter-class>scalastuff.website.Website</filter-class>
+  <filter-class>scalastuff.website.ScalastuffWebsite</filter-class>
 </filter>
   	
 
