@@ -1,0 +1,4 @@
+<site>
+  <processor class="org.scalastuff.scalapages.ScaladocProcessor"/>
+  <virtual-page file="scaladocpage.html" pattern=".*.html"/>
+</site> 

@@ -1,26 +1,33 @@
 package org.scalastuff.scalapages.http
 
-
 import org.scalastuff.scalapages.{PageServer,TemplateBaseURI,Context}
-import com.weiglewilczek.slf4s.Logging
-import javax.servlet.{Filter,FilterConfig,ServletRequest,ServletResponse,FilterChain}
+import grizzled.slf4j.Logging
+import javax.servlet.{Filter,FilterConfig,ServletRequest,ServletResponse,FilterChain,ServletException}
 import javax.servlet.http.{HttpServletRequest,HttpServletResponse}
-import java.io.{InputStream,OutputStream}
+import java.io.{File,InputStream,OutputStream}
 import java.net.URI
 
 abstract class ScalaPagesFilter extends Filter with Logging {
-
+  
   var pageServer : PageServer = null
-  var context : Context = new Context
-
-  def init(config : FilterConfig) = {
+  implicit var context : Context = new Context
+  
+  override def init(config : FilterConfig) {
     try {
+      val realClasspath = config.getServletContext.getRealPath("WEB-INF/classes")
+      if (realClasspath != null && new File(realClasspath).isDirectory) {
+      	context ++= TemplateBaseURI -> new File(realClasspath).toURI
+      } else {
+      	context ++= TemplateBaseURI -> new URI("classpath:/")
+      }
+      logger.info("Template base URI: " + TemplateBaseURI.get)
+      
       init
     	pageServer = new PageServer()(context)
     } catch {
     	case e => 
     		logger error e.getMessage
-    		logger error (e.getMessage, e)
+    		logger error (e.getMessage, e) 
     }
   }
   override def doFilter(request : ServletRequest, response : ServletResponse, chain : FilterChain) {
@@ -49,11 +56,12 @@ abstract class ScalaPagesFilter extends Filter with Logging {
   	  case e => 
   	    logger.error("Error handling request %s: %s".format(requestString, e.getMessage))
     		logger.trace("Error handling request %s",e)
+    		e.printStackTrace
   	}
   }
   def destroy {}
 	
-  def init() = {}
+  def init = {}
   def handle : PartialFunction[Request, Response]
 }
 
@@ -92,6 +100,16 @@ object Stream {
   def apply(f : OutputStream => Unit) = new OutputStreamResponse(f)
   
   def apply(is : InputStream) = new OutputStreamResponse(copy(is, _))
+  
+  def apply(c : Class[_], resource : String) = new OutputStreamResponse(copy(c, resource, _))
+  
+  def copy(c : Class[_], resource : String, os : OutputStream) {
+    try { 
+	  	copy(c.getResourceAsStream(resource), os)
+	  } catch {
+	    case e => throw new Exception("Resource not found on classpath: " + resource) 
+	  }
+  }
   
   def copy(is : InputStream, os : OutputStream) { 
   	try {

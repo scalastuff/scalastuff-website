@@ -1,24 +1,21 @@
 package org.scalastuff.scalapages
 
-import com.weiglewilczek.slf4s.Logging
+import grizzled.slf4j.Logging
 import collection.mutable
 import java.util.concurrent.ConcurrentHashMap
 import java.io.OutputStream
+
 import java.net.URI
 import io.Codec
-import xml.Elem
+import xml.{Elem,NodeSeq}
 import collection.JavaConversions._	
 
 /**
  * Page that is currently being processed.
  */
-object CurrentPage extends ContextVar[Page](null)
+object CurrentPage extends ContextVar[Page]
 
-/**
- * Pages that are known upon startup. Usually, the ones
- * referred to by index.xml files.
- */
-object IndexedPages extends ContextVar[Seq[Page]](Nil)
+object CurrentPath extends ContextVar[List[String]](Nil)
 
 object DefaultProcessors extends ContextVar[Seq[Processor]](MenuProcessor :: TrailProcessor :: XmlProcessor :: StdProcessor :: TemplateProcessor :: ConsolidateHead :: Nil)
 
@@ -28,45 +25,61 @@ object OutputCodec extends ContextVar[Codec](Codec.UTF8)
 
 class PageServer(implicit var context : Context) extends Logging {
   
-	private val pageMap : mutable.Map[List[String], Seq[Producer]] = new java.util.concurrent.ConcurrentHashMap[List[String], Seq[Producer]]
+	private val staticPageMap = mutable.Map[List[String], Seq[Producer]]()
+	private val dynamicPageMap = new java.util.concurrent.ConcurrentHashMap[List[String], Seq[Producer]]
 				
 	val processors = DefaultProcessors.get
 	val codec = OutputCodec.get
 	
-	try {
-		/**
-		 * Main index for site
-		 */
+	val site = try {
 		// (note: uses TemplateBaseURI)
-		val index = new Index
+		// read main site and sub sites
+		val site = new Site
 		
-		// store indexed pages in context
-		context ++= IndexedPages -> index.pageExtent
-		
-		// pre-produce indexed pages
-		index.pageExtent.foreach { page =>
-			pageMap.put(page.path, processPage(page))	
-		}
-		logger.info(index.pageExtent.map(p => p.path.mkString("/","/",": " + p.title)).mkString("Page server started:\n  ", "\n  ", ""))
+		// pre-process known pages
+		val preProcessedPages =
+		  for (page <- site.pageExtent) 
+		  	yield (page, preProcess(page.path, page))
+
+		// process them
+		for ((page, xml) <- preProcessedPages)
+			staticPageMap.put(page.path, process(page.path, page, xml))	
+		  
+		// log
+//			logger.info(site.pageExtent.map(p => p.path.mkString("/","/",": " + p.title)).mkString("Page server started:\n  ", "\n  ", ""))
+		logger info site.mkString()
+		site
 	} catch {
 		case e => 
-//		e.printStackTrace
 		logger.error(e.getMessage)
+		throw e
 	}
 	
 	/**
 	 * Serve page at path.
 	 */
 	def renderPage(path : List[String], os : OutputStream) {
-		val producers = pageMap.getOrElseUpdate(path, Seq())
-		producers.foreach(_ produce os)
-	}
-	def renderPage(path : List[String], page : Context => Page, os : OutputStream) {
-		val producers = pageMap.getOrElseUpdate(path, processPage(page(context)))
+	  
+	  // first try the static map
+		val producers = staticPageMap.getOrElse(path, 
+		    
+		    // try dynamically loaded pages
+				dynamicPageMap.getOrElseUpdate(path, 
+				    
+				    // load for first time
+				    site.loadPage(path) match {
+						  case Some(page) => process(path, page, preProcess(path, page))
+						  case None => Throw("Page not found: " + path.mkString("/"))
+						}))
+				
+		// produce output
 		producers.foreach(_ produce os)
 	}
 	
-	private def processPage(page : Page) : Seq[Producer] = {
-		Processor.process(page.html, page.processors ++ processors)(context ++ (CurrentPage -> page))
-	}
+	private def preProcess(path : List[String], page : Page) : NodeSeq =  
+	  Processor.preProcess(page.xml, page.processors)(page.context ++ (CurrentPath -> path, CurrentPage -> page))
+
+	private def process(path : List[String], page : Page, xml : NodeSeq) : Seq[Producer] = 
+  	Processor.process(xml, page.processors)(page.context ++ (CurrentPath -> path, CurrentPage -> page))
+
 }

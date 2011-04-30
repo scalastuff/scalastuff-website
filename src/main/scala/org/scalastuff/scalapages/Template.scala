@@ -1,6 +1,6 @@
 package org.scalastuff.scalapages
 
-import com.weiglewilczek.slf4s.Logging
+import grizzled.slf4j.Logging
 import Preamble._
 import java.io.{IOException, InputStream}
 import java.net.URI
@@ -57,5 +57,6 @@ object TemplateProcessor extends Processor {
 		
 		namedSections.foreach(section => if (!availableSections.contains(section.label)) Throw("Section '" + section.label + "' not defined by template '" + CurrentTemplateURI.getRelative + "'\n  available sections: " + availableSections.mkString(", ")))
 		xml2
+		
 	}
 }

@@ -1,7 +1,11 @@
 package org.scalastuff.scalapages
 
-import java.io.IOException
+import java.io.{File, IOException}
 import java.net.URI
+
+object UriOps {
+  implicit def uriOps(uri : URI) = new UriOps(uri)
+}
 
 class UriOps(uri : URI) {
 	
@@ -15,4 +19,15 @@ class UriOps(uri : URI) {
 		}
 		case _ => uri.toURL.openStream
 	}
+	
+	def ensureEndSlash = 
+	  if (uri.getPath.endsWith("/")) uri
+	  else new URI(uri.getScheme, uri.getUserInfo, uri.getHost, uri.getPort, uri.getPath + "/", uri.getQuery, uri.getFragment)
+	
+	def list : Seq[URI] =  try {
+  	val uri = ensureEndSlash
+  	new File(uri).list.map(uri.resolve(_))
+  } catch {
+    case e => Seq()
+  }
 }

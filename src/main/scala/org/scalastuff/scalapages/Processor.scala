@@ -13,8 +13,15 @@ object Processor {
   
   def load(className : String)(implicit context: Context) = {
     try {
-      val desc = descriptorOf(scalaTypeOf(Class.forName(className)))
-      desc.companion
+      val desc = descriptorOf(Class.forName(className))
+      val cc = Class.forName(desc.beanType.erasure.getName + "$")
+      println("MODULE:"+cc.getField("MODULE$").get(cc))
+      desc.companion match {
+        case Some(processor : Processor) => processor
+        case None => desc.newInstance().asInstanceOf[Processor]
+        case c => println("NONOL: " + c) 
+        null
+      }
     } catch {
       case e => Throw("Couldn't load processor %s".format(className), e)
     }

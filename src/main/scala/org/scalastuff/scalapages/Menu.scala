@@ -27,14 +27,15 @@ object Menu {
     menu(items, 0)
   }
   
-  def mkItem(page : Page) : (List[String], NodeSeq) = (page.path, Text(page.title))
+  def mkItem(page : Page) : (List[String], NodeSeq) = (page.path, Text((page.xml \\ "h1").text))
 }
 
 
 object MenuProcessor extends Processor {
 	override val name = Some("menu")
 	override def process(recurse : NodeSeq => Context => Seq[Producer])(implicit context : Context) = {
-		case e : Elem if e.label == "menu" => 
+		case e : Elem if e.label == "menu" =>
+		  val site = CurrentPage.site.root
 			val items : Seq[(List[String],NodeSeq)] = 
 			  for (item <- e \\ "item") 
 			  yield (mkPath(item.getOrElse("@href", "")), item \*)
@@ -43,10 +44,10 @@ object MenuProcessor extends Processor {
 				  case "" => Seq()
 				  case s => 
 				  	val path = mkPath(s)
-				  	IndexedPages.get.filter(_.path == path).map(Menu.mkItem).toSeq
+				  	site.pageExtent.filter(_.path == path).map(Menu.mkItem).toSeq
 			  }
 			
-			Seq(Producer(Menu(IndexedPages.get, CurrentPage.get, items ++ parentItems, e.attributes, depth = e.getOrElse("@depth", 0), flat = e ?? "@flat").toString))
+			Seq(Producer(Menu(site.pageExtent, CurrentPage.get, items ++ parentItems, e.attributes, depth = e.getOrElse("@depth", 0), flat = e ?? "@flat").toString))
 	}
 	
 	def mkPath(s : String) = s.split("/").filter(_.nonEmpty).toList
