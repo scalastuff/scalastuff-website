@@ -1,5 +1,26 @@
 <template:include file="ScalastuffPage.xml">
-<div>
-	<h1>Blog</h1>
+<div class="section" id="content">
+      <div class="container_12">
+        <div class="wrapper">
+          
+              <h1>Blog</h1>
+   
+   <p>Our blog is hosted at <a href="http://scalastuff.wordpress.com/">http://scalastuff.wordpress.com/</a>
+  </p>
+  <p> <ul class="news">
+              <scalastuff:blogs prefix="blog">
+                <li><p class="date">
+                    <strong><blog:date date-format="d" /> </strong>
+                    <blog:date date-format="MMM" />
+                  </p>
+                  <p><blog:html /></p>
+                  <p><blog:author /></p>
+                </li>
+              </scalastuff:blogs>
+            </ul></p>
+   
+   
+</div>
+</div>
 </div>
 </template:include>

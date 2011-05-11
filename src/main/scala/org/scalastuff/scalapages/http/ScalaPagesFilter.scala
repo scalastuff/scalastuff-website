@@ -27,7 +27,7 @@ abstract class ScalaPagesFilter extends Filter with Logging {
     } catch {
     	case e => 
     		logger error e.getMessage
-    		logger error (e.getMessage, e) 
+    		logger trace (e.getMessage, e) 
     }
   }
   override def doFilter(request : ServletRequest, response : ServletResponse, chain : FilterChain) {
@@ -56,7 +56,6 @@ abstract class ScalaPagesFilter extends Filter with Logging {
   	  case e => 
   	    logger.error("Error handling request %s: %s".format(requestString, e.getMessage))
     		logger.trace("Error handling request %s",e)
-    		e.printStackTrace
   	}
   }
   def destroy {}

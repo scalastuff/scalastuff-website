@@ -1,10 +1,10 @@
 <index>
   <page file="Home.html"/>
+  <processor class="org.scalastuff.scalapages.DefaultWebProcessors" inherit="true"/>
 	<site path="projects/scalabeans" file="projects/scalabeans/"/>
 	<index path="projects/scalacas" file="projects/scalacas/"/>
 	<index path="projects/scalapages" file="projects/scalapages/"/>
 	<page path="projects" file="projects/Projects.html"/>
-	<page path="howto" file="HowTo.html"/>
 	<page path="blog" file="Blog.html"/>
 	<page path="about" file="AboutUs.html"/>
 	<site path="scaladoc" file="scaladoc"/>

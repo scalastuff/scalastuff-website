@@ -17,9 +17,7 @@ object CurrentPage extends ContextVar[Page]
 
 object CurrentPath extends ContextVar[List[String]](Nil)
 
-object DefaultProcessors extends ContextVar[Seq[Processor]](MenuProcessor :: TrailProcessor :: XmlProcessor :: StdProcessor :: TemplateProcessor :: ConsolidateHead :: Nil)
-
-object AvailableProcessors extends ContextVar[Seq[Processor]](XmlProcessor :: MenuProcessor :: TrailProcessor :: Nil)
+object DefaultWebProcessors extends CompoundProcessor(MenuProcessor, TrailProcessor, StdProcessor, TemplateProcessor, ConsolidateHead, BeanProcessor, XmlProcessor)
 
 object OutputCodec extends ContextVar[Codec](Codec.UTF8)
 
@@ -28,7 +26,6 @@ class PageServer(implicit var context : Context) extends Logging {
 	private val staticPageMap = mutable.Map[List[String], Seq[Producer]]()
 	private val dynamicPageMap = new java.util.concurrent.ConcurrentHashMap[List[String], Seq[Producer]]
 				
-	val processors = DefaultProcessors.get
 	val codec = OutputCodec.get
 	
 	val site = try {
@@ -50,7 +47,7 @@ class PageServer(implicit var context : Context) extends Logging {
 		logger info site.mkString()
 		site
 	} catch {
-		case e => 
+		case e =>
 		logger.error(e.getMessage)
 		throw e
 	}

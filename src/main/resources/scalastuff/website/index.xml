@@ -4,7 +4,6 @@
 	<index path="projects/scalapages" file="projects/scalapages/"/>
   <page file="Home.html"/>
 	<page path="projects" file="projects/Projects.html"/>
-	<page path="howto" file="HowTo.html"/>
 	<page path="blog" file="Blog.html"/>
 	<page path="about" file="AboutUs.html"/>
 </index> 

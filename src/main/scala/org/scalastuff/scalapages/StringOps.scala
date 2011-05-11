@@ -9,11 +9,13 @@ class StringOps(s : String) {
 	def toCamelCase : String = toCamelCase(false)
 	
   def toCamelCase(capitalizeFirst : Boolean) = {
-    val result = s.split("-").filter(_.nonEmpty).map(s => Character.toUpperCase(s(0)) + s.substring(1)).mkString
-    if (capitalizeFirst && result.nonEmpty && Character.isUpperCase(result(0))) 
-      Character.toUpperCase(result(0)) + result.substring(1)
+    val result = s.split("-").filter(_.nonEmpty)
+    if (result.nonEmpty) {
+      if (capitalizeFirst) Character.toUpperCase(result(0)(0)) + result(0).substring(1) else result(0) +
+      result.drop(1).map(s => Character.toUpperCase(s(0)) + s.substring(1)).mkString
+    }
     else
-      result
+      ""
   }
 	
 	def splitWords : List[String] = {

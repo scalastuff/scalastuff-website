@@ -1,5 +1,5 @@
 /* Getting the new tags to behave */
-article, aside, audio, canvas, command, datalist, details, embed, figcaption, figure, footer, header, hgroup, keygen, meter, nav, output, progress, section, source, video{ display: block; }
+..article, .aside, audio, canvas, command, datalist, details, embed, figcaption, figure, .footer, .header, hgroup, keygen, meter, .nav, output, progress, .section, source, video{ display: block; }
 mark, rp, rt, ruby, summary, time{ display: inline }
 
 /* Global properties ======================================================== */
@@ -10,14 +10,17 @@ body {
 	font-family:Arial, Helvetica, sans-serif;
 	font-size:100%; 
 	line-height:1.0625em;
-	color:#737373;
+	#color:#737373;
 	min-width:961px;
 	}
 html { min-width:980px;}
 html, body { height:100%;}
 
 
-
+code {
+	font-size: 120%;
+}
+	
 /* Global Structure ============================================================= */
 #main {
 	margin: 0 auto;
@@ -26,15 +29,15 @@ html, body { height:100%;}
 	font-size:.75em;
 	}
 
-	/* Header */
-	header{
+	/* .header */
+	.header{
 		height:122px;
 		overflow:hidden; 
 		position:relative;
 		}
 	
 	/* Content */
-	section#content {
+	#content.section {
 		background:url(../images/content-tail.gif) 0 0 repeat-x #fff;
 		padding:15px 0 44px 0;
 		position:relative;
@@ -45,7 +48,7 @@ html, body { height:100%;}
 		}
 	
 	/* Sidebar */
-	aside.top{
+	.aside.top {
 		background:url(../images/aside-bg.gif) 0 0 repeat-x #b9b9b9;
 		padding:0 20px 0 20px;
 		font:12px/18px Arial, Helvetica, sans-serif;
@@ -57,14 +60,14 @@ html, body { height:100%;}
 		behavior:url(resources/js/PIE.htc);
 		margin-bottom:1px;
 		}
-		aside.top .inner {
+		.aside.top .inner {
 			padding:11px 15px 37px 0;
 			}
 		.divider {
 			background:url(../images/divider.gif) 100% 0 no-repeat;
 			}
 		
-		aside.left {
+		.aside.left {
 			float:left;
 			}
 
@@ -279,18 +282,18 @@ h6 {
 
 
 
-/* Header
+/* .header
 ---------------------------------------- */
 
 /* Logo */
-header .logo {
+.header .logo {
 	position:absolute;
 	left:30px;
 	top:30px;
 	background:url(../images/logo.png) no-repeat 100% 0;
 	padding:0 55px 0 0;
 	}
-	header .logo h1 {
+	.header .logo h1 {
 		font-size:42px;
 		color:#fff;
 		line-height:1.2em;
@@ -298,15 +301,15 @@ header .logo {
 		text-shadow:1px 1px 0 rgba(0, 0, 0, .9);
 		letter-spacing:-2px;
 		}
-		header .logo h1 a {
+		.header .logo h1 a {
 			color:#fff;
 			text-decoration:none;
 			}
-		header .logo h1 i {
+		.header .logo h1 i {
 			font-style:normal;
 			color:#449ff9;
 			}
-	header .logo span.description {
+	.header .logo span.description {
 		display:block;
 		font-size:11px;
 		text-transform:uppercase;
@@ -317,16 +320,16 @@ header .logo {
 
 
 
-/* Navigation */
-header nav {
+/* .navigation */
+.header .nav {
 	position:absolute;
-	left:420PX;
+	left:533PX;
 	top:36px;
 	}
-	header nav li {
+	.header .nav li {
 		float:left;
 		}
-		header nav li a {
+		.header .nav li a {
 			float:left;
 			width:100px;
 			height:60px;
@@ -340,11 +343,11 @@ header nav {
 			margin-right:3px;
 			margin-left:4px;
 			}
-		header nav li a:hover {
+		.header .nav li a:hover {
 			background:url(../images/nav-bg-hover.png) no-repeat 0 6px;
 		}
-		header nav li.selected a,
-		header nav li a.current {
+		.header .nav li.selected a,
+		.header .nav li a.current {
 			background:url(../images/nav-bg-act-2.png) no-repeat 0 6px;
 			text-shadow:1px 1px 0 #f1b955;
 			color:#27324d;
@@ -411,8 +414,8 @@ header nav {
 .anythingSlider .forward:hover          { background-position: 0 -200px; }
 .anythingSlider .back:hover             { background-position: -67px -200px; }
 
-#thumbNav                               { position: relative; top: 264px; text-align: center; background:url(../images/anything-nav-bg.png) no-repeat 0 0; padding:8px 7px 8px 0; text-align:right; margin-left:2px;}
-#thumbNav a                             { 
+#thumb.nav                               { position: relative; top: 264px; text-align: center; background:url(../images/anything-.nav-bg.png) no-repeat 0 0; padding:8px 7px 8px 0; text-align:right; margin-left:2px;}
+#thumb.nav a                             { 
 	font: 13px/18px Arial, Helvetica, sans-serif;
 	display: inline-block;
 	text-decoration: none;
@@ -430,8 +433,8 @@ header nav {
 	text-shadow:1px 1px 0 #f1f1f1;
 	color:#000;
 }
-#thumbNav a:hover                       { background: #eee; }
-#thumbNav a.cur                         { background: #e0a213; }
+#thumb.nav a:hover                       { background: #eee; }
+#thumb.nav a.cur                         { background: #e0a213; }
 
 #start-stop                             {
 	position:absolute;
@@ -476,12 +479,12 @@ header nav {
 	padding:0 12px 0 0;
 	}
 
-article {
+.article {
 	border-bottom:1px solid #e7e8e8;
 	padding-bottom:20px;
 	margin-bottom:35px;
 	}
-article.last {
+.article.last {
 	border-bottom:none;
 	padding-bottom:0;
 	margin-bottom:0;
@@ -528,32 +531,32 @@ article.last {
 
 /* Content
 ---------------------------------------- */
-footer {
+.footer {
 	text-align: center;
 	color:#3e4e7d;
 	font-size:12px;
 	line-height:18px;
 	padding:15px 0 32px 30px;
 }
-	footer a {
+	.footer a {
 		color:#3e4e7d;
 		text-decoration:none;
 		}
-	footer a:hover {
+	.footer a:hover {
 		color:#8592bb;
 		text-decoration:underline;
 		}
 	
-	footer nav ul li {
+	.footer .nav ul li {
 		display:inline;
 		background:url(../images/bull2.gif) no-repeat 0 6px;
 		padding:0 7px 0 12px;
 		}
-		footer nav ul li:first-child {
+		.footer .nav ul li:first-child {
 			background:none;
 			padding-left:0;
 			}
-			footer nav ul li a.current {
+			.footer .nav ul li a.current {
 				color:#8592bb;
 				text-decoration:underline;
 				}

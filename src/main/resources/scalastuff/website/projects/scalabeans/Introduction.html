@@ -1,30 +1,22 @@
 <div>
 	<h1>ScalaBeans</h1>
-	<p>
-	ScalaBeans is a reflection toolkit. It provides run-time discovery mechanism for domain objects written in Scala.
-	This can be used to simplify integration with existing reflection-based Java libraries and developing Scala-native
-	ones. Type information (including generic type arguments) is preserved. ScalaBeans supports Scala-specific features
-	like immutablity, collections, case classes and others.
-	</p>
-	<p>
-	ScalaBeans is also a set of agreements on how Scala language constructs can be interpreted from the reflection point
-	of view. It provides answers on such questions as: what is a property? how object can be instantiated at runtime?
-	how to construct collections at run-time? and many others. 
-	
-	We believe that having all this questions been sorted out and implemented in a fast
-	and robust library provides Scala folks with powerful gears for developing amazing new technologies. Areas traditionally
-	occupied by reflection are serialization, persistence, GUI frameworks. It is just so much easier to say: "hey, here is my
-	object, would you like to save it in the database?" and write one line of code than write boiler-plate code for each and
-	every property of your bean. ScalaBeans make it possible.  
-	</p>
-	<p>
-	One word of caution. As OO-programmers with decades of experience we believe in strongly-typed languages and are convinced
-	that language compiler is our best friend. We encourage you to use decent design (OOP or FP - whichever you like most) and
-	get your code checked by compiler as much as possible. Use reflection where appropriate and use it with care.    
-	</p>	
-	<p>
-	ScalaBeans comes with <a href="http://protostuff.googlecode.com">protostuff</a> integration. 
-	This combination provides fastest (known at the moment of writing) serialization
-	mechanism for Scala.
-	</p>
+	<p>ScalaBeans provides run-time discovery and reflection for domain objects written in Scala. 
+	Type information (including generic type arguments) is preserved. 
+	Scala-specific features like immutability, collections, case classes etc are supported. 
+	ScalaBeans provides also high-performance serialization to/from protobuf, json, xml formats using <a href="http://protostuff.googlecode.com">protostuff</a>.
+  </p>
+  
+  <p>ScalaBeans is also a set of agreements on how Scala language constructs can be interpreted from the reflection point of view. 
+  It provides answers to such questions as: what is a property? how object can be instantiated at runtime? how to construct collections at run-time? and many others. 
+  We believe that having all this questions been sorted out and implemented in a fast and robust library provides Scala folks with powerful gears for developing amazing new technologies. 
+  Areas traditionally occupied by reflection are serialization, persistence, GUI frameworks. 
+  It is just so much easier to say: "hey, here is my object, would you like to save it in the database?" and write one line of code than write boiler-plate code for each and every property of your bean. 
+  ScalaBeans make it possible.
+  </p>
+
+  <p>One word of caution. 
+  We believe in strongly-typed languages and are convinced that language compiler is our best friend. 
+  We encourage you to use decent design (OOP or FP - whichever you like most) and get your code checked by compiler as much as possible. 
+  Use reflection where appropriate and use it with care.
+  </p>
 </div>

@@ -6,7 +6,7 @@ import Preamble._
 
 object ConsolidateHead extends Processor {
 	override def preProcess(recurse : NodeSeq => Context => NodeSeq)(implicit context : Context) = {
-		case e : Elem if e.label == "html" =>
+		case e : Elem if e.prefix == "" && e.label == "html" =>
 			var head = NodeSeq.Empty
 			val xml = recurse(e.child)(context) copy {
 				case <head>{h @ _*}</head> => 

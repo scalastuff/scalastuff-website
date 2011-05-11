@@ -56,7 +56,7 @@ class Site(parent : Option[Site] = None, file : String = "", val path : List[Str
 	def virtualPage(path : List[String])(implicit context : Context) = 
 		xml.child.collect {
 			case e : Elem if e.label == "virtual-page" && path.mkString("/").matches(e getOrElse("@pattern", ".*")) => 
-				mkPage(e get "@file", path, decorators ++ decorators(e) ++ processors ++ processors(e) ++ inheritedProcessors ++ DefaultProcessors)
+				mkPage(e get "@file", path, decorators ++ decorators(e) ++ processors ++ processors(e) ++ inheritedProcessors)
 		}.headOption
 
 
@@ -68,7 +68,7 @@ class Site(parent : Option[Site] = None, file : String = "", val path : List[Str
 					// @path is optional here
 						e get "@file",
 					path ++ (e \ "@path").text.split("/").filter(_.nonEmpty),
-					decorators ++ decorators(e) ++ processors ++ processors(e) ++ inheritedProcessors ++ DefaultProcessors)
+					decorators ++ decorators(e) ++ processors ++ processors(e) ++ inheritedProcessors)
 		}
 
 	// scanned pages
@@ -81,7 +81,7 @@ class Site(parent : Option[Site] = None, file : String = "", val path : List[Str
 	        file.listFiles.flatMap(scan(_, p :+ file.getName))
 	      } else if (file.getName.matches(pattern)) Seq(
 	          mkPage(file.toURI.toString, path ++ p,
-					decorators ++ processors ++ inheritedProcessors ++ DefaultProcessors))
+					decorators ++ processors ++ inheritedProcessors))
 	        else Seq()
 	    }
 	    scan(new File(siteUri), Nil)
@@ -103,7 +103,7 @@ class Site(parent : Option[Site] = None, file : String = "", val path : List[Str
 		  	case None => try {
 		  	  // try a scanned page
 		  	  // TODO check pattern
-		  	  Some(mkPage(file, path, decorators ++ processors ++ inheritedProcessors ++ DefaultProcessors)) 
+		  	  Some(mkPage(file, path, decorators ++ processors ++ inheritedProcessors)) 
 		  	} catch {
 		  	  case e => virtualPage(path.drop(this.path.size)) match {
 		  	    case Some(page) => Some(page)

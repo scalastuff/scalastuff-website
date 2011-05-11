@@ -1,0 +1,78 @@
+<div>
+  <h1>Serialization</h1>
+
+Serialization is an optional feature. To enable it add following dependencies to your project:
+
+<pre class="brush: xml">
+<dependencies>
+  ...
+  <dependency>
+    <groupId>com.dyuproject.protostuff</groupId>
+    <artifactId>protostuff-api</artifactId>
+    <version>1.0.0</version>
+  </dependency>
+  <dependency>
+    <groupId>com.dyuproject.protostuff</groupId>
+    <artifactId>protostuff-core</artifactId>
+    <version>1.0.0</version>
+  </dependency>
+</dependencies>
+<repositories>
+  ...
+  <repository>
+    <id>protostuff-repo</id>
+    <name>protostuff-repo</name>
+    <url>http://protostuff.googlecode.com/svn/repos/maven2</url>
+  </repository>
+</repositories>
+</pre>
+
+<p>If you want to use json serialization, add also protostuff-json. Add protostuff-xml dependency for XML serialization.</p>
+
+<p>Most Scala features are supported: immutability, collections, arrays, Options, Tuples, case classes etc. Implementation is targeted to protobuf format, json and xml support use the same code largely at the moment and thus derives all the protobuf limitations. Important one is on property values - <a href="http://advorkovyy.blogspot.com/2011/03/handling-protobuf-nulls-in-scala.html">nulls are not allowed</a>. ScalaBeans will throw an exception on null values since there is no reliable way to serialize/deserialize them with protobuf.</p>
+
+<p>The easiest way to start with serialization is to import <code>org.scalastuff.proto.Preamble._</code>. You get 2 functions: <code>readerOf[B]</code> and <code>writerOf[B]</code>. They provide <code>BeanReader</code> and <code>BeanWriter</code> for given bean type respectively.</p>
+
+<p>Serializing to/from byte arrays can be done in this way then:</p>
+
+<pre class="brush: scala">
+import org.scalastuff.proto._
+import org.scalastuff.proto.Preamble._
+
+val reader = readerOf[MyBean]
+val writer = writerOf[MyBean]
+
+val buffer: Array[Byte] = writer.toByteArray(myBean, ProtobufFormat)
+
+val deserialized: MyBean = reader.fromByteArray(buffer, ProtobufFormat)
+</pre>
+
+<p>Next to <code>ProtobufFormat</code> there is also <code>GraphProtostuffFormat</code> (supports object graphs), <code>JsonFormat</code>, <code>JsonFieldTagsFormat</code> (uses numeric field tags instead of names), <code>XmlFormat</code>. Another interesting feature of protostuff is support for [http://code.google.com/p/protostuff/wiki/GwtJsonOverlays GWT Json overlays]. It makes possible to build decent GWT-Scala bridge.</p>
+
+<p>Working with java.io streams is similar:</p>
+
+<pre class="brush: scala">
+val out: OutputStream = ...
+val in: InputStream = ...
+
+writer.writeTo(out, myBean, ProtobufFormat)
+
+val desrialized: MyBean = reader.readFrom(in, ProtobufFormat)
+</pre>
+
+<p>To get full protostuff functionality one can use run-time <code>Schema</code> from ScalaBeans:</p>
+
+<pre class="brush: scala">
+val schema = MirrorSchema.schemaOf[MyBean]
+val linkedBuffer = LinkedBuffer.allocate(512)
+
+val buffer: Array[Byte] = YamlIOUtil.toByteArray(myBuffer, schema, linkedBuffer)
+
+println(new String(buffer))
+</pre>
+
+<p>This approach has important limitation: if top-level bean has constructor parameters they all have to have default values and be mutable properties (vars). This is by design.</p>
+
+<p>To simplify resource management, ScalaBeans provides also implementation of <a href="loan-design-pattern">Loan Design Pattern</a>.</p>
+
+</div>

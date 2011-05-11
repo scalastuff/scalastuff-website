@@ -6,7 +6,7 @@ import org.scalastuff.scalabeans.{BeanDescriptor,PropertyDescriptor}
 import org.scalastuff.scalabeans.Preamble._
 import collection.mutable
 import Preamble._
-import org.scalastuff.scalabeans.types.{IterableType,AnyValType}
+import org.scalastuff.scalabeans.types.{IterableType,AnyValType,AnyRefType,ScalaType,DateType,SeqType}
 
 object RootBean {
 	def apply[T <: AnyRef](prefix : String, getInstance : => T)(implicit manifest : Manifest[T]) =
@@ -43,19 +43,14 @@ private class ProcessingState {
 
 private object ProcessingState extends ContextVar[ProcessingState](new ProcessingState)
 
-object BeanProcessor {
-  val NS = "http://scalapages.scalastuff.org/beans"
-}
-
-trait BeanProcessor extends Processor {
+object BeanProcessor extends Processor {
   
-  var beans : Array[AnyRef]
+	val NS = "http://scalapages.scalastuff.org/beans"
   
 	override def process(recurse : NodeSeq => Context => Seq[Producer])(implicit context : Context) = {
     
     // match root
     case root : RootNode =>
-      
       // initialize processing state
       ProcessingState.nextBeanIndex = 0
       ProcessingState.nextSeqIndex = 0
@@ -74,10 +69,10 @@ trait BeanProcessor extends Processor {
       Seq(new InitializeBeansProducer(ProcessingState.nextBeanIndex, ProcessingState.nextSeqIndex, childrenWithRoots))
     	
     // elements are matched that have an unbound or special namespace
-		case e : Elem if e.prefix != null && (e.namespace == "" || e.namespace == BeanProcessor.NS) =>
+		case e : Elem if e.prefix != null && (e.namespace == null || e.namespace == BeanProcessor.NS) =>
 		  
 		  // find the processor bound to this prefix
-		  BoundProcessors.get.get(e.prefix) match {
+		  ProcessingState.prefixMap.get(e.prefix) match {
 		    case Some(processor) => processor.invoke(e, recurse)
 		    case None => Throw("Prefix not bound in %s.%s".format(e.prefix, e.label))
 		  }
@@ -89,13 +84,16 @@ trait BoundProcessor {
   def process(children : Seq[Producer])(implicit context : Context) : Seq[Producer]
 }
 
-private object BoundProcessors extends ContextVar[Map[String, BoundProcessor]](null)
-
-
-private class AnyValProcessor(elem : Elem, beanIndex : Int, property : PropertyDescriptor) extends BoundProcessor {
+private class AnyValProcessor(elem : Elem, beanIndex : Int, property : PropertyDescriptor, format: Option[String]) extends BoundProcessor {
   	override def process(children : Seq[Producer])(implicit context : Context) = {
-  	  new AnyValProducer(beanIndex, property) +: children
+  	  new AnyValProducer(beanIndex, property, format) +: children
   	}
+}
+
+private class DateProcessor(elem : Elem, beanIndex : Int, property : PropertyDescriptor, dateFormat : String) extends BoundProcessor {
+	override def process(children : Seq[Producer])(implicit context : Context) = {
+		new DateProducer(beanIndex, property, dateFormat) +: children
+	}
 }
 
 private abstract class BoundBeanProcessor(desc : BeanDescriptor) extends BoundProcessor {
@@ -114,6 +112,9 @@ private abstract class BoundBeanProcessor(desc : BeanDescriptor) extends BoundPr
 	  
 	override def invoke(elem : Elem, recurse : NodeSeq => Context => Seq[Producer])(implicit context : Context) = {
 
+	  // extract attributes
+	  var attributes = elem.attributes.reader
+	  
 	  // make property name
 	  val name = elem.label.toCamelCase
 	  
@@ -128,16 +129,26 @@ private abstract class BoundBeanProcessor(desc : BeanDescriptor) extends BoundPr
 	  
 	  // was it a sequence property?
 	  val processor = property.scalaType match {
+	  	case t if t.erasure == classOf[NodeSeq] =>  
+	  	  new AnyValProcessor(elem, beanIndex, property, attributes get "format")
 	    case IterableType(t) => 
-	      val prefix = elem getOrElse("@prefix", elem.label)
-	      val seqPrefix = elem getOrElse("@seq-prefix", "seq")
-	      val repeatProcessor = new SeqRepeatProcessor(beanIndex, descriptorOf(property.scalaType))
-	      val seqProcessor = new SeqProcessor(elem, seqPrefix, repeatProcessor, beanIndex, property)
+	      val prefix = attributes getOrElse("prefix", elem.label)
+	      val seqPrefix = attributes getOrElse("seq-prefix", "seq")
+	      val repeatProcessor = new SeqRepeatProcessor(beanIndex, descriptorOf(t))
+	      val seqProcessor = new SeqProcessor(elem, prefix, repeatProcessor, beanIndex, property, t)
 	      ProcessingState.prefixMap += (prefix -> repeatProcessor, seqPrefix -> seqProcessor)
 	      seqProcessor
-	    case AnyValType() => new AnyValProcessor(elem, beanIndex, property)
+	    case DateType =>
+	      attributes get "date-format" match {
+	        case Some(dateFormat) => new DateProcessor(elem, beanIndex, property, dateFormat)
+	        case None => new AnyValProcessor(elem, beanIndex, property, attributes get "format")
+	      }
+	    case t =>
+	    	new AnyValProcessor(elem, beanIndex, property, attributes get "format")
 //	    case _ if elem has "@prefix" =>
 	  }
+	  
+	  if (attributes.remaining.nonEmpty) Throw("Unexpected attribute %s in %s:%s".format(attributes.remaining.head.prefixedKey, elem.prefix, elem.label))
 	  
 	  // recurse
 	  val children = recurse(elem.child)(context)
@@ -159,7 +170,7 @@ private class InvokeBeanProcessor(sourceIndex : Int, property : PropertyDescript
 	}  
 }
 
-private class SeqProcessor(parent : Elem, defaultSeqPrefix : String, implicitRepeat : SeqRepeatProcessor, sourceBeanIndex : Int, property : PropertyDescriptor) extends BoundProcessor {
+private class SeqProcessor(parent : Elem, defaultPrefix : String, implicitRepeat : SeqRepeatProcessor, sourceBeanIndex : Int, property : PropertyDescriptor, propertyType : ScalaType) extends BoundProcessor {
 
   // only assign an index when this bean is actually referred to
 	var seqIndexOption : Option[Int] = None
@@ -182,16 +193,16 @@ private class SeqProcessor(parent : Elem, defaultSeqPrefix : String, implicitRep
 	    case "first" => Seq(new SeqFirstProducer(seqIndex, recurse(elem.child)(context)))
 	    case "last" => Seq(new SeqLastProducer(seqIndex, recurse(elem.child)(context)))
 	    case "index" => Seq(new SeqIndexProducer(seqIndex, recurse(elem.child)(context)))
+	    case "size" => Seq(new SeqSizeProducer(seqIndex, recurse(elem.child)(context)))
 	    case "repeat" =>
-		    
 		    if (explicitRepeat.isDefined) Throw("Multiple repeat sections in %s:%s".format(parent.prefix, parent.label))
-		    explicitRepeat = Some(new SeqRepeatProcessor(seqIndex, descriptorOf(property.scalaType)))
+		    explicitRepeat = Some(new SeqRepeatProcessor(seqIndex, descriptorOf(propertyType)))
 	      
 			  // save old prefix map
 			  val oldPrefixMap = ProcessingState.prefixMap
 			  
 			  // add processor to map
-			  val prefix = elem getOrElse ("@prefix", defaultSeqPrefix)
+			  val prefix = elem getOrElse ("@prefix", defaultPrefix)
 			  ProcessingState.prefixMap += (prefix -> explicitRepeat.get)
 			  
 			  // recurse children
@@ -212,12 +223,12 @@ private class SeqProcessor(parent : Elem, defaultSeqPrefix : String, implicitRep
 	  // either seq-operation are used, or bean-invocations in implicit or explicit repeat 
 	  if (seqIndexOption.isDefined || implicitRepeat.beanIndexOption.isDefined || (explicitRepeat.isDefined && explicitRepeat.get.beanIndexOption.isDefined)) {
 	    val children2 = explicitRepeat match {
-	      case Some(proc) => proc.process(children)
-	      case None => children
+	      case Some(proc) => children
+	      case None => implicitRepeat.process(children)
 	    }
 	    Seq(new InvokeSeqProducer(sourceBeanIndex, seqIndex, property, children2))
 	  } else  
-	    children
+	  	children
 	}  
 }
 
@@ -227,6 +238,7 @@ private class SeqRepeatProcessor(seqIndex : Int, desc : BeanDescriptor) extends 
 		case Some(index) =>
 		  Seq(new SeqRepeatProducer(seqIndex, beanIndex, children))
 		case None => children
+		Seq(new SeqRepeatProducer(seqIndex, beanIndex, children))
 		}
 	}  
 }

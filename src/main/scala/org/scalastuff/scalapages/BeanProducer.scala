@@ -1,6 +1,7 @@
 package org.scalastuff.scalapages
 
 import java.io.OutputStream
+import java.text.SimpleDateFormat
 import org.scalastuff.scalabeans.PropertyDescriptor
 
 case class SeqState(seq : Iterable[_ <: AnyRef], iterator : Iterator[_ <: AnyRef], var index : Int, var first : Boolean)
@@ -12,10 +13,21 @@ class InitializeBeansProducer(beanCount : Int, seqCount : Int, children : Seq[Pr
 	}
 }
 
-class AnyValProducer(beanIndex : Int, property : PropertyDescriptor) extends Producer {
+class AnyValProducer(beanIndex : Int, property : PropertyDescriptor, format: Option[String]) extends Producer {
 	def produce(os : OutputStream)(implicit context : Context) {
-	  val value = property.get(context.beans(beanIndex)).toString
-	  os.write(Producer.arrayOf(value))
+	  val value : Any = property.get(context.beans(beanIndex))
+	  format match {
+	    case Some(format) => os.write(Producer.arrayOf(format.format(value)))
+	    case None => os.write(Producer.arrayOf(value.toString))
+	  }
+	}
+}
+
+class DateProducer(beanIndex : Int, property : PropertyDescriptor, dateFormat: String) extends Producer {
+  // TODO replace with fastdateformat
+	def produce(os : OutputStream)(implicit context : Context) {
+		val value : Any = property.get(context.beans(beanIndex))
+		os.write(Producer.arrayOf(new SimpleDateFormat(dateFormat).format(value)))
 	}
 }
 
@@ -81,5 +93,12 @@ class SeqIndexProducer(seqIndex : Int, children : Seq[Producer]) extends Produce
 	def produce(os : OutputStream)(implicit context : Context) {
 		val seqState = context.beanSeqStates(seqIndex)
 		os.write(Producer.arrayOf(seqState.index.toString)) 
+	}  
+}
+
+class SeqSizeProducer(seqIndex : Int, children : Seq[Producer]) extends Producer {
+	def produce(os : OutputStream)(implicit context : Context) {
+		val seqState = context.beanSeqStates(seqIndex)
+		os.write(Producer.arrayOf(seqState.seq.size.toString)) 
 	}  
 }

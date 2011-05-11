@@ -1,0 +1,70 @@
+<div>
+
+<h1>Loan design pattern</h1>
+
+<p>Joshua Bloch <a href="https://docs.google.com/Doc?id=ddv8ts74_0vnstdfdh&amp;pli=1">wrote</a> some time ago, that closing resources manually <cite>has proven ugly and error prone. Even good programmers get it wrong most of the time</cite>.</p>
+
+<p>Java needed new JDK release to solve this problem, in Scala we have more luck and can implement automatic resource disposal ourselves using standard language features. This is known as [http://scala.sygneca.com/patterns/loan Loan design pattern]. ScalaBeans provides implementation of this pattern.</p>
+
+<p>Using it with 1 resource is straightforward:</p>
+
+<pre class="brush: scala">
+import org.scalastuff.util.Loan._
+
+// open resource
+val res1 = ...
+
+loan(res1) {
+  // use resource
+  ...
+}
+
+// resource is closed automatically, no additional code needed
+
+</pre>
+
+<p>Any type of resource is supported thanks to structural types in Scala. Only requirement is that it has to have <code>close(): Unit</code> method.</p>
+
+<p>But what if we have to open several resources at the same time? Let's try 2:</p>
+
+<pre class="brush: scala">
+val res1 = new InputStream(..)
+val res2 = new OutputStream(..)
+</pre>
+
+<p>If opening second resource throws an exception, the first one will never gets closed! We do not want that, so use <code>open(..)</code> function:</p>
+
+<pre class="brush: scala">
+val (in, out) = open(new InputStream(..), new OutputStream(..))
+</pre>
+
+<p>Function <code>open</code> ensures that either all resources are opened succesfuly (no exception was thrown) or all are closed. If exception is thrown during any resource acquisition all already opened resources are closed automatically.</p>
+
+<p>If some resources are dependent on others and must be closed separately, use <code>closeOnException</code> function:</p>
+
+<pre class="brush: scala">
+val in = new InputStream(..)
+val reader = closeOnException(in) { new Reader(in) }
+</pre>
+
+<p>Same as <code>loan(..)</code>, <code>closeOnException(..)</code> accepts any number of resources. We hope that with this functions it will be much easier to implement reliable resource management, just do not forget to use one of this functions for all resources managed by your code. There is no magic, resource is managed automatically only while inside the function. So, following code is incorrect:</p>
+
+<pre class="brush: scala">
+val (in, out) = open(new InputStream(..), new OutputStream(..))
+
+val reader = closeOnException(in) { new Reader(in) }
+val writer = closeOnException(out) { new Writer(out) }
+</pre>
+
+<code>out</code> is not managed while <code>Reader</code> creation and <code>in</code> is not managed during <code>Writer</code> creation. Correct way to do it:
+
+<pre class="brush: scala">
+val (in, out) = open(new InputStream(..), new OutputStream(..))
+
+val (reader, writer) = closeOnException(in, out) { 
+  open(new Reader(in), new Writer(out))
+}
+</pre>
+
+<p>Well, I think Joshua Bloch was absolutely right when he made his proposal for JDK7</p> 
+</div>

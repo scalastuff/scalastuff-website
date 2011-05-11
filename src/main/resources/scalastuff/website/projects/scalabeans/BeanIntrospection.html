@@ -3,11 +3,11 @@
 	<p>
 	There are 2 types of objects describing a bean within ScalaBeans toolkit: BeanDescriptor and PropertyDescriptor. 
 	BeanDescriptor provides access to property descriptors and to bean constructor. It can be obtained in this way:
-	<pre class="brush: scala">
+<pre class="brush: scala">
 	import org.scalabeans.Preamble._
 	
 	val descriptor = descriptorOf[MyBean]
-	</pre>	
+</pre>	
 	</p>
 	
 	<h2>Bean Properties</h2>
@@ -29,16 +29,21 @@
 	
 	<p>
 	This design makes it easy to pattern-match property descriptors and provide different behavior for different kind of properties:
-	<pre class="brush: scala">
-	for (property &lt;- descriptor.property) property match {
-		case constructorParameter: ConstructorParameter => println("Constructor parameter " + property.name)
-		case mutable: MutablePropertyDescriptor => println("var " + property.name)
-		case immutable: ImmutablePropertyDescriptor => println("val " + property.name)
-	}
-	
-	// let's get only mutable properties now
-	val mutableProperties = descriptor.properties collect { case mutable: MutablePropertyDescriptor => mutable }
-	</pre>
+<pre class="brush: scala">
+  for (property &lt;- descriptor.property) property match {
+  	case constructorParameter: ConstructorParameter => 
+  	  println("Constructor parameter " + property.name)
+  	case mutable: MutablePropertyDescriptor => 
+  	  println("var " + property.name)
+  	case immutable: ImmutablePropertyDescriptor => 
+  	  println("val " + property.name)
+  }
+  
+  // let's get only mutable properties now
+  val mutableProperties = descriptor.properties collect { 
+   case mutable: MutablePropertyDescriptor => mutable 
+  }
+</pre>
 	</p>
 	
 	<p>
@@ -57,19 +62,19 @@
 	</p>
 	<p>
 	ScalaType encapsulates type erasure and type arguments (if there are any):
-	<pre class="brush: scala">
+<pre class="brush: scala">
 	trait ScalaType {
 	  def erasure: Class[_]
 	  def arguments: Seq[ScalaType]
 	}	
-	</pre>
+</pre>
 	</p>
 	
-	<h3>Pattern matching</h3>
+	<h2>Pattern matching</h2>
 	
 	<p>
 	Consider following example:
-	<pre class="brush: scala">
+<pre class="brush: scala">
 	def describe(t : ScalaType) = t match {
 	  case StringType => "string"
 	  case OptionType(StringType) => "option of string"
@@ -81,13 +86,13 @@
 	}
 	
 	for (property &lt;- descriptor.properties) describe(property.scalaType)	
-	</pre>
+</pre>
 	As you can see, we are able now not only pattern-match on type erasure, but also on type arguments and even extract them
 	in the case expressions. It is particularly handy for Option and collection types, when we want to know directly the type
 	of collection elements for example.
 	</p>
 	
-	<h3>Collections</h3>
+	<h2>Collections</h2>
 	
 	<p>
 	ScalaType is useful not only for accessing type information, for collection types it can be also used to get new collection
@@ -102,42 +107,69 @@
 	implement GenericCompanion or MapFactory, new builder function will be not discovered as well. 
 	
 	Look at the CollectionType.newBuilder declaration:
-	<pre class="brush: scala">
-		trait CollectionType extends ... {
-			val newBuilder: Option[() => Builder[Any, Traversable[Any]]] = ...
-		}
-	</pre>
+<pre class="brush: scala">
+	trait CollectionType extends ... {
+		val newBuilder: Option[() => Builder[Any, Traversable[Any]]] = ...
+	}
+</pre>
 	
 	This scary code says that CollectionType might have a function which produces new collection Builder. Collection elements
 	from the builder point of view are all of type Any, which is not always true, so be careful with element types. 
 	
 	Let's put all this theory in practice. Consider following example:
 	
-	<pre class="brush: scala">
-	class Person {
-		var addresses: Set[Address]
-	}
-	
-	val descriptor = descriptorOf[Person]
- 
-	for {
-		// get the Scala type first
-		collectionType &lt;- descriptor.property("addresses") collect { case t @ CollectionType(_) => t }
-		// get new builder function (if present, it is an Option)
-		newBuilder &lt;- traversableType.newBuilder
-	} {
-		// call the function to instantiate new collection builder
-		val builder = newBuilder()
-		println(builder.result()) // will print Set()
-	} 	
-	</pre> 
+<pre class="brush: scala">
+  class Person {
+  	var addresses: Set[Address]
+  }
+  
+  val descriptor = descriptorOf[Person]
+  
+  for {
+  	// get the Scala type first
+  	collectionType &lt;- descriptor.property("addresses") collect { case t @ CollectionType(_) => t }
+  	// get new builder function (if present, it is an Option)
+  	newBuilder &lt;- traversableType.newBuilder
+  } {
+  	// call the function to instantiate new collection builder
+  	val builder = newBuilder()
+  	println(builder.result()) // will print Set()
+  } 	
+</pre> 
 	
 	Here we can see how all this stuff is used: property type is pattern matched as CollectionType, function extracted from the Option and then
 	called to create new Builder instance. Created collection is of type Set - exactly what is declared in the bean class.
 	</p>
 	
-	<h3>Enums</h3>
+	<h2>Arrays</h2>
 	<p>
-	//TODO
+	Array types can be pattern matched with ArrayType(componentType). Since arrays can be always built, newBuidlder() has ArrayBuilder[Any] type:
+
+<pre class="brush: scala">
+	scalaType match {
+	  case at@ArrayType(componentType) =>
+	    val builder: ArrayBuilder[Any] = at.newBuilder()
+	    builder += ...
+	    builder.result()
+	}
+</pre>
+As with collections, be careful with the objects you put into array. Since we use reflection, compiler doesn't know the right type here, type check is performed at run-time. Use componentType to get the type information of contained objects.
+	</p>
+	<h2>Enum types</h2>
+	<p>
+	Enum types can be pattern matched with <code>EnumType(enum)</code>. The <code>enum</code> object provides access to enum values. Among others it has <code>values</code>, <code>valueOf(name: String)</code>, <code>valueOf(ordinal: Int)</code> :
+
+<pre class="brush: scala">
+scalaType match {
+  case EnumType(enum) =>
+    println(enum.values)
+    println(enum.names)
+    println(enum.ordinals)
+    println(enum.valueOf("red"))
+    println(enum.valueOf(1))
+}
+</pre>
+
+Only ScalaBeans enums are supported. Read <a href="beans-in-scala#Enums">here</a> how to use them.
 	</p>
 </div>

@@ -1,7 +1,7 @@
 <template:include file="ScalastuffPage.xml">
   <h1 style="display:none">Home</h1>
-  <template:top>
- <aside class="top">
+   <template:top>
+ <div class="aside top">
     <div class="container_12">
       <div class="wrapper">
         <div class="grid_4 divider">
@@ -14,46 +14,78 @@
         <div class="grid_4 divider">
           <div class="inner">
             <h3><img style="padding-top:10px"  src="/resources/images/icon_eye.png" alt=""/>ScalaCas<span></span></h3>
-            Quisque diam lorem, interdum vitae, dapibus ac, scelerisque vitae, pede. Donec llus non erat lacini a fermentc in velit ve... <a href="projects/scalacas" class="link1">More Info</a>
+            Scala library for Cassandra. 
+            <p>Stay tuned!</p>
           </div>
         </div>
         <div class="grid_4">
           <div class="inner">
             <h3><img  style="padding-top:10px" src="/resources/images/icon_page.png" alt=""/>ScalaPages<span></span></h3>
-            Diam lorem, interdum vitae, dapibus ac, scelerisq ue vitae, pede. Donec llus non erat lacinia ferm entc in velit ve... <a href="projects/scalapages" class="link1">More Info</a>
+            Templating enging for scala. 
+            <p>Stay tuned!</p>
           </div>
         </div> 
       </div>
     </div>
-  </aside>
+  </div>
   </template:top>
-
-    <section id="content">
+   
+    <div class="section" id="content">
       <div class="container_12">
         <div class="wrapper">
+          
+          <div class="grid_8">
+          <div class="indent">
+          <div class="inside1">
+              <h2>Welcome to ScalaStuff!</h2>
+   
+   <p>After hibernating for so many years in Java Enterprise world, software developing
+   is on the move again. High scalability rush is happening. Everybody wants to go Cloud.
+   Success of Google, Amazon, social network
+   web sites inspires many to apply same technologies in other areas, traditionally
+   occupied by JEE stack. JVM provides very fast and efficient execution
+   platform, Scala gives us immutable data structures, concurrency and parallel execution,
+   NoSQL provides fast and scalable data storage.</p>
 
-   <article class="last">
-     <div class="wrapper">
-       <div class="grid_4 colborder omega">
-         <div class="inside">
-          <h2>News</h2>
-          <ul class="news">
-             <li>
-               <p class="date"><strong>20</strong>Apr</p>
-               <p>Scalastuff.org website released.</p>
-             </li>
-             <li>
-               <p class="date"><strong>2</strong>Apr</p>
-               ScalaBeans 0.1 released! See <a href="scalabeans">release notes</a>. Go to the <a href="scalabeans">project</a> page.
-             </li>
-           </ul>
-           <br/>
-           <a href="/#" class="button">Read More</a>
-       </div>
-     </div>
-     </div>
-   </article>
+   <p>What is also needed is a foundation, set of frameworks and libraries which make software development
+   using this new paradigms fun. They must take care of low-level details, plumbing, provide
+   new concepts to avoid re-inventing same mechanisms for each new project and writing boilerplate
+   code again and again.</p>
+   
+   <p>There is a lot of work to do, we are now in the "green field" situation. A lot of frameworks
+   will appear to compete and complement each other. ScalaStuff wants to be part of this process
+   and provide development community with quality technologies designed for high performance,
+   high scalability, high availability. We do not want to reinvent stuff, there are
+   enough areas where nothing is done yet. We want our technologies integrate with existing ones
+   to provide the most benefit.</p>
+   
+   <p>We want to support community and be supported by the community. Feel free to provide your
+   ideas, comments, patches, just feedback - it will be all very much appreciated.</p>
+          </div>
+          </div>
+          </div>
+        
+					<div class="aside grid_4">
+					<div class="box">
+						<h2>News</h2>
+						<ul class="news">
+							<scalastuff:news>
+								<li><p class="date">
+										<strong><news:date date-format="d" /> </strong>
+										<news:date date-format="MMM" />
+									</p>
+									<p><news:html /></p>
+								</li>
+							</scalastuff:news>
+						</ul>
+					</div>
+					</div>
+
+  
+   
+
+   
    </div>
    </div>
-   </section>  
+   </div>  
 </template:include>

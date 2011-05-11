@@ -2,6 +2,7 @@ package org.scalastuff.scalapages
 
 import xml.{ Elem, Node, NodeSeq, Text }
 import io.Codec
+import org.scalastuff.scalabeans.BeanDescriptor
 import org.scalastuff.scalabeans.Preamble._
 import Preamble._
 
@@ -11,20 +12,20 @@ case class RootNode(child : Node*) extends Node {
 
 object Processor {
   
+	implicit def fromDescriptor(desc : BeanDescriptor) = desc.companion match {
+		case Some(processor : Processor) => processor
+		case None => desc.newInstance().asInstanceOf[Processor]
+	}
+	
+	implicit def fromClass(c : Class[_]) = fromDescriptor(descriptorOf(c))
+  implicit def fromClassName(className : String) = fromClass(Class.forName(className))
+  
   def load(className : String)(implicit context: Context) = {
-    try {
-      val desc = descriptorOf(Class.forName(className))
-      val cc = Class.forName(desc.beanType.erasure.getName + "$")
-      println("MODULE:"+cc.getField("MODULE$").get(cc))
-      desc.companion match {
-        case Some(processor : Processor) => processor
-        case None => desc.newInstance().asInstanceOf[Processor]
-        case c => println("NONOL: " + c) 
-        null
-      }
-    } catch {
-      case e => Throw("Couldn't load processor %s".format(className), e)
-    }
+  	try {
+  	  fromClassName(className)
+  	} catch {
+  	case e => Throw("Couldn't load processor %s".format(className), e)
+  	}
   }
   
 	def preProcess(xml: NodeSeq, processors : Seq[Processor])(implicit context: Context) : NodeSeq = {

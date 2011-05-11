@@ -54,26 +54,25 @@
 <body>
 <div id="main">
   <!-- header -->
-  <header>
+  <div class="header">
     <div class="title-panel">
       <div>
         <img src="/resources/ScalastuffLogoWhite.png" height="40px"/> <span>Stuff that matters</span>
       </div>
     </div>
-    <nav>
+    <div class="nav">
       <menu root="/" flat="true" depth="1"/>
-      
-    </nav>
-  </header>
+    </div>
+  </div>
   <template:top/>
   <template:content/>
 
   <!-- footer -->
-  <footer>
-    <nav>
+  <div class="footer">
+    <div class="nav">
     ScalaStuff.org &#0169; 2011 &#8226; <a href="/sitemap">sitemap</a>
-    </nav>
-  </footer>
+    </div>
+  </div>
 </div>
 </body>
 </html>

@@ -1,0 +1,71 @@
+<div>
+  <h1>Working with beans</h1>
+
+<h2>Property values</h2>
+Reading property values with ScalaBeans is simple:
+
+<pre class="brush: scala">
+class Account(var balance: Double = 0.0)
+
+val account = new Account(100.0)
+
+val descriptor = descriptorOf[Account]
+prinln(descriptor.get(account, "balance"))
+</pre>
+<p>This will print "100.0". Changing property value is not much more complicated:</p>
+
+<pre class="brush: scala">
+descriptor.set(account, "balance", 200.0)
+println(account.balance)
+</pre>
+
+<p>We get "200.0" in the output.</p>
+
+<p>This way of working with properties while simple is not very suitable for high-performance scenarios since property is searched by name each time you want to read or write it. Better approach is to cache PropertyDescriptor and use it instead of BeanDescriptor. It has also get(..) method. MutablePropertydescriptor has set(..) method.</p>
+
+<h2>Creating new instances</h2>
+BeanDescriptor has newInstance(..) method which uses bean class default constructor to create new bean instance. Continuing our example above we can write:
+
+<pre class="brush: scala">
+val newAccount = descriptor.newInstance(300.0)
+</pre>
+Default constructor parameter values are supported, so the following code will also work:
+
+<pre class="brush: scala">
+val emptyAccount = descriptor.newInstance()
+</pre>
+<p>This will create new Account with balance = 0.0 (see constructor definition).</p>
+
+<h2>Using BeanBuilder</h2>
+What about situations when we get bunch of property values and want to create new bean instance with all the properties initialized to them? Some property values has to be provided as constructor parameters, some has to be set after bean instance is created, missing constructor parameters has to get default value etc. ScalaBeans has BeanBuilder class which encapsulates all this logic and simplifies bean instance creation. Just get new builder from BeanDescriptor, provide it with all known property values and create new bean instance calling result() method.
+
+<p>Look at the following example:</p>
+
+<pre class="brush: scala">
+class Account(var balance: Double = 0.0, 
+  val number: String, 
+  val accountType: String = "deposit")
+
+val descriptor = descriptorOf[Account]
+
+val builder = descriptor.newBuilder()
+builder.set(descriptor("balance"), 100.0)
+builder.set(descriptor("number"), "123456789")
+
+val account = builder.result()
+</pre>
+<p>This code will create new Account bean with balance = 100.0, number = "123456789" and accountType = "deposit". BeanBuilder will automatically place all known constructor parameters at the right place, get default values for missing parameters and call newInstance(..).</p>
+
+<p>Looking at the Account class definition, balance variable doesn't seem to be at the good place: it is better to move it inside the class:</p>
+
+<pre class="brush: scala">
+class Account(
+  val number: String, 
+  val accountType: String = "deposit") {
+
+  var balance: Double = 0.0
+}
+</pre>
+
+BeanBuilder code above doesn't have to be changed: mutable properties will be initialized with provided values after new instance is created. So, account balance will be 100.0 in this case as well.
+</div>

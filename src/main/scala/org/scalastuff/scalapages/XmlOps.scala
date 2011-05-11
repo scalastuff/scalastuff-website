@@ -1,6 +1,6 @@
 package org.scalastuff.scalapages
 
-import scala.xml.{Elem, Node, NodeSeq, Text, XML}
+import scala.xml.{Elem, Node, NodeSeq, Text, XML, MetaData}
 
 object XmlOps {
 	def copy(node : Node)(fn : PartialFunction[Node, NodeSeq]) : NodeSeq = {
@@ -47,3 +47,30 @@ class NodeSeqOps(xml : NodeSeq) {
     case _ => NodeSeq.Empty                                  
   } }
 }
+
+class MetaDataOps(attributes : MetaData) {
+  def reader = new AttrReader(attributes)
+}
+
+class AttrReader(attributes : MetaData) {
+  
+  var remaining = attributes
+  
+	def get(attr : String) = attributes.get(attr) match {
+	  case Some(nodes) =>
+	    remaining = remaining remove attr
+	    Some(nodes.text)
+		case None => None
+	}
+	
+	def getOrElse(attr : String, defaultValue : => String) = get(attr) match {
+		case Some(s) => s
+		case None => defaultValue
+	}
+	
+	def getOrElse(attr : String, defaultValue : => Int) : Int = get(attr) match {
+		case Some(s) => s.toInt
+		case None => defaultValue
+	}
+}
+
