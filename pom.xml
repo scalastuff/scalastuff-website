@@ -14,7 +14,7 @@
 		<dependency>
 			<groupId>org.scalastuff</groupId>
 			<artifactId>scalabeans</artifactId>
-			<version>0.1-SNAPSHOT</version>
+			<version>0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -53,6 +53,11 @@
 			<version>0.9.6</version>
 			<type>pom</type>
 		</dependency>
+		<dependency>
+			<groupId>org.ccil.cowan.tagsoup</groupId>
+			<artifactId>tagsoup</artifactId>
+			<version>1.2</version>
+		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>
@@ -60,10 +65,15 @@
 			<name>Scala-tools Maven2 Repository</name>
 			<url>http://scala-tools.org/repo-releases</url>
 		</repository>
+		<repository>
+			<id>Sonatype OSS releases</id>
+			<url>http://oss.sonatype.org/content/repositories/releases</url>
+		</repository>
 	</repositories>
 	<build>
 		<sourceDirectory>src/main/scala</sourceDirectory>
 		<testSourceDirectory>src/test/scala</testSourceDirectory>
+		<outputDirectory>src/main/webapp/WEB-INF/classes</outputDirectory>
 		<plugins>
 			<plugin>
 				<groupId>org.scala-tools</groupId>
